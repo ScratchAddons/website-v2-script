@@ -37,7 +37,7 @@ const gitSA = simpleGit("../sa/")
 
 ;(async () => {
 
-	require("../src/git-commit-all-and-push.js")(
+	await require("../src/git-commit-all-and-push.js")(
 		`Update addons data (${new Date().toISOString()})`,
 		gitEmail,
 		gitName
