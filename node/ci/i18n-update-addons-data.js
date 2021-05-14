@@ -1,5 +1,6 @@
 const { gitEmail, gitName } = require("./consts.js")
 const simpleGit = require("simple-git").default
+const globby = require("globby")
 
 ;(async () => {
 
