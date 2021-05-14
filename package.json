@@ -1,0 +1,28 @@
+{
+  "name": "@scratchaddons/website-v2-script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScratchAddons/website-v2-script.git"
+  },
+  "author": "Hans5958",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ScratchAddons/website-v2-script/issues"
+  },
+  "homepage": "https://github.com/ScratchAddons/website-v2-script#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "chalk": "^4.1.1",
+    "fs-extar": "0.0.1-security",
+    "globby": "^11.0.3",
+    "prettier": "^2.3.0",
+    "simple-git": "^2.39.0",
+    "yaml": "^1.10.2"
+  }
+}
