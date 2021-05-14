@@ -4,7 +4,7 @@ const git = simpleGit("./")
 
 module.exports = async (commitMessage, gitEmail, gitName) => {
 
-	if (await git.status().files.length === 0) {
+	if ((await git.status()).files.length === 0) {
 		console.log("No files changed. Skipping.")
 		console.log("::set-output name=commitSkipped::true")
 		return
