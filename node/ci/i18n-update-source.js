@@ -9,8 +9,13 @@ require("../src/i18n/compile-en-to-i18n.js")(
 	"en/"
 )
 
-require("../src/git-commit-all-and-push.js")(
-	`Update source files (${new Date().toISOString()})`,
-	gitEmail,
-	gitName
-)
+;(async () => {
+	
+	await require("../src/git-commit-all-and-push.js")(
+		`Update source files (${new Date().toISOString()})`,
+		gitEmail,
+		gitName
+	)
+
+})()
+

@@ -3,19 +3,19 @@ const globby = require("globby")
 const yaml = require("yaml")
 const chalk = require("chalk")
 
-module.exports = (inputPath, outputPath) => {
+module.exports = (hugoRepoPath, i18nRepoPath) => {
 	
-	fs.ensureDir(outputPath)
+	fs.ensureDir(i18nRepoPath)
 
-	console.log("Compiling en from Hugo format into i18n repo format...")
+	// console.log("Compiling en from Hugo format into i18n repo format...")
 
 	// const allIndex = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 
 	// ;(() => {
-	// 	const files = globby.sync(inputPath + "content/"+ "**/*.html")
+	// 	const files = globby.sync(hugoRepoPath + "content/"+ "**/*.html")
 
 	// 	files.forEach(file => {
-	// 		let filePath = file.replace(inputPath + "content/", "")
+	// 		let filePath = file.replace(hugoRepoPath + "content/", "")
 	// 		console.log(chalk`Separating {inverse ${filePath}}...`)
 
 	// 		let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
@@ -28,27 +28,27 @@ module.exports = (inputPath, outputPath) => {
 	// 			delete frontMatter.ignore_i18n
 	// 		}
 	// 		let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)
-	// 		fs.outputFileSync(outputPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatter))
-	// 		fs.outputFileSync(outputPath + "html-content/" + filePath, contentPart.join("\r\n"))
+	// 		fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatter))
+	// 		fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentPart.join("\r\n"))
 	// 	})
 	// })()
 
 	// ;(() => {
-	// 	const files = globby.sync(inputPath + "content/" + "**/*.md")
+	// 	const files = globby.sync(hugoRepoPath + "content/" + "**/*.md")
 
 	// 	files.forEach(file => {
-	// 		let filePath = file.replace(inputPath + "content/", "")
+	// 		let filePath = file.replace(hugoRepoPath + "content/", "")
 	// 		console.log(chalk`Copying {inverse ${filePath}}...`)
 
 	// 		let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
-	// 		fs.outputFileSync(outputPath + "markdown/" + filePath, fileLines.join("\r\n"))
+	// 		fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileLines.join("\r\n"))
 	// 	})
 	// })()
 
 	;(() => {
 		console.log(chalk`Copying Hugo i18n strings file...`)
 
-		fs.copyFileSync(inputPath + "i18n/en.yaml", outputPath + "hugo-i18n.yml")
+		fs.copyFileSync(hugoRepoPath + "i18n/en.yaml", i18nRepoPath + "hugo-i18n.yml")
 	})()
 
 	console.log("Compiling done!")

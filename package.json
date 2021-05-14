@@ -19,7 +19,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
-    "fs-extar": "0.0.1-security",
+    "fs-extra": "^10.0.0",
     "globby": "^11.0.3",
     "prettier": "^2.3.0",
     "simple-git": "^2.39.0",

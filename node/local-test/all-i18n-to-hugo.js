@@ -14,12 +14,12 @@ globby.sync(["output/i18n/*", "!output/i18n/en"], {
 	onlyDirectories: true
 }).forEach(langPath => {
 
-	require("../src/compile-i18n-to-hugo")(
+	require("../src/i18n/compile-i18n-to-hugo")(
 		langPath + "/",
 		"output/hugo-ready/",
 	)
 
-	require("../src/add-languages-on-config")(
+	require("../src/i18n/add-languages-on-config")(
 		langPath + "/language.json",
 		"output/hugo-ready/config.yml"
 	)

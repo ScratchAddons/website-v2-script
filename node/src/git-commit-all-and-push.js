@@ -2,9 +2,9 @@ const simpleGit = require("simple-git").default
 
 const git = simpleGit("./")
 
-module.exports = (commitMessage, gitEmail, gitName) => {
+module.exports = async (commitMessage, gitEmail, gitName) => {
 
-	if (git.status().files.length === 0) {
+	if (await git.status().files.length === 0) {
 		console.log("No files changed. Skipping.")
 		console.log("::set-output name=commitSkipped::true")
 		return
@@ -15,13 +15,13 @@ module.exports = (commitMessage, gitEmail, gitName) => {
 	console.log("Commiting all files...")
 	console.log(`user: ${gitName} <${gitEmail}>`)
 	console.log(`message: ${commitMessage}`)
-	git.addConfig("user.email", gitEmail)
-	git.addConfig("user.name", gitName)
-	git.add(".")
-	git.commit(commitMessage)
+	await git.addConfig("user.email", gitEmail)
+	await git.addConfig("user.name", gitName)
+	await git.add(".")
+	await git.commit(commitMessage)
 
 	console.log("Pushing...")
-	git.push("origin", "master")
+	await git.push("origin", "master")
 
 	console.log("Done!")
 }
