@@ -1,3 +1,4 @@
+const { gitEmail, gitName } = require("./consts.js")
 const simpleGit = require("simple-git").default
 
 const args = process.argv.slice(2)
