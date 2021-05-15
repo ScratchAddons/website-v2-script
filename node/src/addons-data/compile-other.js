@@ -2,9 +2,9 @@ const fs = require("fs-extra")
 const prettier = require("prettier")
 const chalk = require("chalk")
 
-const dataset = []
-
 module.exports = (inputPath, outputPath, languageCode) => {
+
+	const dataset = []
 
 	if (languageCode === "en") throw Error("Language can't be en. Use the other script!")
 	

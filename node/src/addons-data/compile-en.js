@@ -2,9 +2,9 @@ const fs = require("fs-extra")
 const prettier = require("prettier")
 const chalk = require("chalk")
 
-const dataset = []
-
 module.exports = (inputPath, outputPath) => {
+
+	const dataset = []
 	
 	console.log(`Start compiling English addon dataset.`)
 

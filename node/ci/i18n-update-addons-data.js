@@ -1,30 +1,25 @@
 const { gitEmail, gitName } = require("./consts.js")
-const simpleGit = require("simple-git").default
 const globby = require("globby")
 const path = require("path")
 
-;(async () => {
+require("../src/addons-data/compile-en")(
+	"../sa/", 
+	"en/addons-data.json"
+)
 
-	require("../src/addons-data/compile-en")(
+globby.sync(["./*", "!./en"], {
+	onlyDirectories: true
+}).forEach(langPath => {
+
+	const languageCode = path.basename(langPath)
+	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+
+	require("../src/addons-data/compile-other")(
 		"../sa/", 
-		"en/addons-data.json"
+		`${languageCode}/addons-data.json`, 
+		languageCodeHugo
 	)
-
-	globby.sync(["./*", "!./en"], {
-		onlyDirectories: true
-	}).forEach(langPath => {
-
-		const languageCode = path.basename(langPath)
-		languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
-
-		require("../src/addons-data/compile-other")(
-			"../sa/", 
-			`${languageCode}/addons-data.json`, 
-			languageCodeHugo
-		)
-	})
-
-})()
+})
 
 ;(async () => {
 
