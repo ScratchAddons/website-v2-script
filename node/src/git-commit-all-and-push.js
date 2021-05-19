@@ -6,11 +6,11 @@ module.exports = async (commitMessage, gitEmail, gitName) => {
 
 	if ((await git.status()).files.length === 0) {
 		console.log("No files changed. Skipping.")
-		console.log("::set-output name=commitSkipped::true")
+		console.log("::set-output name=commitSkipped::1")
 		return
 	}
 
-	console.log("::set-output name=commitSkipped::false")
+	console.log("::set-output name=commitSkipped::0")
 	
 	console.log("Commiting all files...")
 	console.log(`user: ${gitName} <${gitEmail}>`)
