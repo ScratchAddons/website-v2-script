@@ -2,7 +2,9 @@ const fs = require("fs-extra")
 const prettier = require("prettier")
 const chalk = require("chalk")
 
-module.exports = (inputPath, outputPath, languageCode) => {
+module.exports = (inputPath, outputPath, options) => {
+
+	let languageCode = options.languageCode
 
 	const dataset = []
 

@@ -17,7 +17,9 @@ const getLanguageDisplayName = languageCode => {
 	}
 }
 
-module.exports = (langaugeJsonPath, configPath, languageCode) => {
+module.exports = (langaugeJsonPath, configPath, options) => {
+
+	let languageCode = options.languageCode
 
 	if (!languageCode) {
 		const languageJsonPathPath = path.parse(langaugeJsonPath)

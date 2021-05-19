@@ -1,21 +1,28 @@
-const { gitEmail, gitName } = require("./consts.js")
+const { 
+	gitEmail, 
+	gitName, 
+	contentGlobPatterns, 
+	translatableFrontMatterFields, 
+	excludedFrontMatterFields,
+	cleanUpGlobPatterns
+} = require("./consts.js")
 const fs = require("fs-extra")
+const globby = require("globby")
+const chalk = require("chalk")
 
-if (fs.existsSync("en/")) fs.removeSync("en/")
+if (fs.existsSync("en/")) {
+	console.log("Cleaning up...")
+	require("../src/remove-glob")("en/", cleanUpGlobPatterns)
+	console.log("All cleaned up!")
+}
 fs.ensureDirSync("en/")
 
 require("../src/i18n/compile-en-to-i18n.js")(
 	"../website/", 
-	"en/"
+	"en/", { 
+		contentGlobPatterns,
+		translatableFrontMatterFields,
+		excludedFrontMatterFields
+	}
 )
-
-;(async () => {
-	
-	await require("../src/git-commit-all-and-push.js")(
-		`Update source files (${new Date().toISOString()})`,
-		gitEmail,
-		gitName
-	)
-
-})()
 

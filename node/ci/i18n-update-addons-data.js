@@ -16,8 +16,9 @@ globby.sync(["./*", "!./en"], {
 
 	require("../src/addons-data/compile-other")(
 		"../sa/", 
-		`${languageCode}/addons-data.json`, 
-		languageCodeHugo
+		`${languageCode}/addons-data.json`, {
+			languageCode: languageCodeHugo
+		}
 	)
 })
 
