@@ -7,5 +7,5 @@ module.exports = configFilePath => {
 		return `[scractch-addons-website.${one.replace("\\", "/")}]`
 	})
 
-	fs.writeFileSync(configFile)
+	fs.writeFileSync(configFilePath, configFile)
 }
