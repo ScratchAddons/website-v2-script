@@ -2,6 +2,7 @@ const fs = require("fs-extra")
 const globby = require("globby")
 const yaml = require("yaml")
 const chalk = require("chalk")
+const htmlMinifier = require("html-minifier")
 
 const allIndex = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 
@@ -37,8 +38,24 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				if (frontMatter.ignore_i18n === true) return
 				delete frontMatter.ignore_i18n
 			}
+
 			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
-			fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentPart.join("\n"))
+			let contentMinified = htmlMinifier.minify(contentPart.join("\n"), {
+				collapseWhitespace: true,
+				conservativeCollapse: true,
+				collapseInlineTagWhitespace: true,
+				minifyCSS: true,
+				minifyJS: true,
+				preserveLineBreaks: true,
+				removeAttributeQuotes: true,
+				removeComments: true,
+				removeEmptyAttributes: true,
+				removeScriptTypeAttributes: true,
+				removeStyleLinkTypeAttributes: true,
+				ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/, /\{\{.+\}\}/ ],
+				processScripts: [ "application/ld+json" ]
+			})
+			fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
 			const frontMatterToTranslate = {}
 			const frontMatterToKeep = {}
