@@ -26,3 +26,6 @@ require("../src/i18n/compile-en-to-i18n.js")(
 	}
 )
 
+require("../src/i18n/rename-resources-in-config").part1(
+	".tx/config"
+)

@@ -4,7 +4,7 @@ const {
 } = require("./consts.js")
 const fs = require("fs-extra")
 
-require("../src/i18n/rename-resources-in-config")(
+require("../src/i18n/rename-resources-in-config").part2(
 	".tx/config"
 )
 
