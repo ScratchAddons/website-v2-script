@@ -6,7 +6,7 @@ module.exports = {
 	
 		configFile = configFile.replace(/\[scratch-addons-website.(.+)\]/g, (match, one) => {
 			if (one.startsWith("en_")) return match
-			return `[scractch-addons-website.en_${one}]`
+			return `[scratch-addons-website.en_${one}]`
 		})
 	
 		fs.writeFileSync(configFilePath, configFile)
@@ -15,7 +15,7 @@ module.exports = {
 		let configFile = fs.readFileSync(configFilePath, "utf-8")
 	
 		configFile = configFile.replace(/\[scratch-addons-website.en_(.+)\]/g, (match, one) => {
-			return `[scractch-addons-website.${one.replace("\\", "_")}]`
+			return `[scratch-addons-website.${one.replace("\\", "_")}]`
 		})
 	
 		fs.writeFileSync(configFilePath, configFile)
