@@ -17,12 +17,12 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 	console.log(contentGlobPatterns.map(pattern => hugoRepoPath + "content/" + pattern))
 	let contentFiles = globby.sync(contentGlobPatterns.map(pattern => hugoRepoPath + "content/" + pattern))
+	let staticFrontYaml = {}
 
 	;(() => { 
 	
 		let files = contentFiles.filter(path => path.endsWith(".html"))
 		let htmlFrontYaml = {}
-		let staticFrontYaml = {}
 
 		files.forEach(file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
@@ -53,15 +53,12 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 		})
 
 		fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml))
-		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml))
 
 	})()
 
 	;(() => {
 
 		let files = contentFiles.filter(path => path.endsWith(".md"))
-		let staticFrontYaml = {}
-		if (fs.existsSync(i18nRepoPath + "static-front.yml")) staticFrontYaml = yaml.parse(fs.readFileSync(i18nRepoPath + "static-front.yml", {encoding: "utf-8"}))
 
 		files.forEach(file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
@@ -94,8 +91,9 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 			].join("\n"))
 		})
 
-		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml))
 	})()
+
+	if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml))
 
 	;(() => {
 		console.log(chalk`Copying Hugo i18n strings file...`)
