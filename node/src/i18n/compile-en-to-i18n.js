@@ -11,6 +11,8 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
 	let translatableFrontMatterFields = options.translatableFrontMatterFields || []
 	let excludedFrontMatterFields = options.excludedFrontMatterFields || []
+
+	excludedFrontMatterFields.push("ignore_i18n")
 	
 	fs.ensureDir(i18nRepoPath)
 
@@ -27,17 +29,27 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		files.forEach(file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
-			console.log(chalk`Parsing {inverse ${filePath}}...`)
 
 			let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
 			// console.log(fileLines)
 			let frontMatterSeparator = allIndex(fileLines, "---")
 			let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
 			const frontMatter = yaml.parse(frontMatterPart.join("\n"))
-			if (frontMatter.ignore_i18n) {
-				if (frontMatter.ignore_i18n === true) return
-				delete frontMatter.ignore_i18n
-			}
+
+			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all") return
+			console.log(chalk`Parsing {inverse ${filePath}}...`)
+
+			const frontMatterToTranslate = {}
+			const frontMatterToKeep = {}
+			Object.keys(frontMatter).forEach(key => {
+				if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
+				else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
+			})
+			if (Object.keys(frontMatterToTranslate).length > 0) htmlFrontYaml[filePath] = frontMatterToTranslate
+			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep
+
+			// fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatterToTranslate))
+			// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep))
 
 			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
 			let contentMinified = htmlMinifier.minify(contentPart.join("\n"), {
@@ -54,22 +66,13 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				removeStyleLinkTypeAttributes: true,
 				ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/, /\{\{.+\}\}/ ],
 				processScripts: [ "application/ld+json" ]
-			})
-			fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+			}).replace(/(\n|^)(\{\{.+\}\})(\n|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
+			if (!(frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content")) fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+			else fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
 
-			const frontMatterToTranslate = {}
-			const frontMatterToKeep = {}
-			Object.keys(frontMatter).forEach(key => {
-				if (translatableFrontMatterFields.includes(key)) frontMatterToTranslate[key] = frontMatter[key]
-				else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
-			})
-			htmlFrontYaml[filePath] = frontMatterToTranslate
-			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep
-			// fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatterToTranslate))
-			// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep))
 		})
 
-		fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml))
+		if (Object.keys(htmlFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml))
 
 	})()
 
@@ -79,38 +82,41 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		files.forEach(file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
-			console.log(chalk`Parsing {inverse ${filePath}}...`)
 
 			let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
-
 			let frontMatterSeparator = allIndex(fileLines, "---")
 			let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
 			const frontMatter = yaml.parse(frontMatterPart.join("\n"))
-			if (frontMatter.ignore_i18n) {
-				if (frontMatter.ignore_i18n === true) return
-				delete frontMatter.ignore_i18n
-			}
-			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)
+
+			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all") return
+			console.log(chalk`Parsing {inverse ${filePath}}...`)
 
 			const frontMatterToTranslate = {}
 			const frontMatterToKeep = {}
 			Object.keys(frontMatter).forEach(key => {
-				if (translatableFrontMatterFields.includes(key)) frontMatterToTranslate[key] = frontMatter[key]
+				if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
 				else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
 			})
+			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep	
 
-			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep
-			fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, [
+			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)
+
+			let fileOutput = [
 				"---",
 				yaml.stringify(frontMatterToTranslate).trim(),
 				"---",
 				contentPart.join("\n")
-			].join("\n"))
+			].join("\n")
+
+			if (!(frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content")) fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+			else fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+
+
 		})
 
-	})()
+		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml))
 
-	if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml))
+	})()
 
 	;(() => {
 		console.log(chalk`Copying Hugo i18n strings file...`)

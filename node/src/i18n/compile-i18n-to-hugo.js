@@ -17,12 +17,12 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	console.log(chalk`Compiling {inverse ${languageCodeHugo}} from i18n repo format into Hugo format...`)
 
-	let htmlFrontYaml = yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"}))
-	let staticFrontYaml = yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"}))
+	let htmlFrontYaml = fs.existsSync(eni18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
+	let staticFrontYaml = fs.existsSync(eni18nLanguageDirPath + "static-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"})) : {}
 
 	;(() => {
-		const inputContentPath = i18nLanguageDirPath + "html-content/"
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath + pattern)).filter(path => path.endsWith(".html"))
+		const inputContentPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "static-html-content/"]
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern))).filter(path => path.endsWith(".html"))
 
 		files.forEach(file => {
 			let filePath = file.replace(inputContentPath, "")
@@ -33,7 +33,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 				...((typeof htmlFrontYaml[filePath] !== "undefined") ? yaml.stringify(htmlFrontYaml[filePath]).trim().split(/\r?\n/) : []),
 				...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath]).trim().split(/\r?\n/) : []),
 				"---",
-				...fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
+				...fs.readFileSync(file, {encoding: "utf-8"}).replace(/<script type="text\/javascript\+hugowrapper">'(.+)'<\/script>/g, "$1").split(/\r?\n/)
 			]
 
 			fs.outputFileSync(`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`, output.join("\n"))
@@ -42,8 +42,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	})()
 
 	;(() => {	
-		const inputMarkdownPath = i18nLanguageDirPath + "markdown/"
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath + pattern)).filter(path => path.endsWith(".md"))
+		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/", i18nLanguageDirPath + "static-markdown/"]
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern))).filter(path => path.endsWith(".md"))
 
 		files.forEach(file => {
 			let filePath = file.replace(inputMarkdownPath, "")
