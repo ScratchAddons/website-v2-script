@@ -20,6 +20,15 @@ globby.sync(["./*", "!./en"], {
 			languageCode: languageCodeHugo
 		}
 	)
+
+	require("../src/i18n/remove-untranslated.js")(
+		"en/",
+		langPath + "/",
+		{
+			globPatterns: ["addons-data.json"]
+		}
+	)
+	
 })
 
 ;(async () => {
