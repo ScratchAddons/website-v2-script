@@ -6,7 +6,7 @@ const yaml = require("yaml")
 
 module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
 
-	let languageCode = options.languageCode
+	let languageCode = options.languageCode || undefined
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
 	// let translatableFrontMatterFields = options.translatableFrontMatterFields || []
 	
