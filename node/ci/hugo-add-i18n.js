@@ -6,7 +6,7 @@ globby.sync(["../i18n/*", "!../i18n/en"], {
 
 	require("../src/i18n/compile-i18n-to-hugo")(
 		langPath + "/",
-		"../i18n/en",
+		"../i18n/en/",
 		"./",
 	)
 
