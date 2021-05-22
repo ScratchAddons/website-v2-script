@@ -1,12 +1,13 @@
 const { gitEmail, gitName } = require("./consts.js")
+const globby = require("globby")
 
 globby.sync(["*", "!en"], {
 	onlyDirectories: true
 }).forEach(langPath => {
 
 	require("../src/i18n/remove-untranslated.js")(
-		"en/",
 		langPath + "/",
+		"en/"
 	)
 
 })

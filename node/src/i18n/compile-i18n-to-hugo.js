@@ -22,7 +22,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	;(() => {
 		const inputContentPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "static-html-content/"]
-		const files = globby.sync(Array.flat(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)))).filter(path => path.endsWith(".html"))
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html"))
 
 		files.forEach(file => {
 			let filePath = file.split("html-content/")[1]
@@ -43,7 +43,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	;(() => {	
 		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/", i18nLanguageDirPath + "static-markdown/"]
-		const files = globby.sync(Array.flat(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)))).filter(path => path.endsWith(".md"))
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md"))
 
 		files.forEach(file => {
 			let filePath = file.split("markdown/")[1]
