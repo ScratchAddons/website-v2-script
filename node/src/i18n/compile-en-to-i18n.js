@@ -109,7 +109,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 			].join("\n")
 
 			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
-			else fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+			else fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
 
 
 		})
