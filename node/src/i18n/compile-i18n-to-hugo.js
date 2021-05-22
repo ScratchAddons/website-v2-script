@@ -25,7 +25,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		const files = globby.sync(Array.flat(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)))).filter(path => path.endsWith(".html"))
 
 		files.forEach(file => {
-			let filePath = file.replace(inputContentPath, "")
+			let filePath = file.split("html-content/")[1]
 			console.log(chalk`Parsing {inverse ${filePath}}...`)
 		
 			const output = [
@@ -46,7 +46,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		const files = globby.sync(Array.flat(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)))).filter(path => path.endsWith(".md"))
 
 		files.forEach(file => {
-			let filePath = file.replace(inputMarkdownPath, "")
+			let filePath = file.split("markdown/")[1]
 			console.log(chalk`Parsing {inverse ${filePath}}...`)
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
