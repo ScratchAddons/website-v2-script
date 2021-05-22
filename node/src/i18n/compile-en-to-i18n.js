@@ -67,7 +67,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/, /\{\{.+\}\}/ ],
 				processScripts: [ "application/ld+json" ]
 			}).replace(/(\n|^)(\{\{.+\}\})(\n|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
-			if (!(frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content")) fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
 			else fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
 
 		})
@@ -108,7 +108,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				contentPart.join("\n")
 			].join("\n")
 
-			if (!(frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content")) fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
 			else fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
 
 
