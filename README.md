@@ -11,7 +11,7 @@ This repository hosts the scripts to build the Scratch Addons website.
 ├── 📂 node      # Node.js scripts
 │   ├── 📂 ci    # Node.js scripts to run for GitHub Actions (CI) 
 │   └── 📂 src   # Source code of the Node.js scripts
-└── 📂 ci        # Bash scrips to run in GitHub Actions (CI)
+└── 📂 sh        # Bash scrips to run in GitHub Actions (CI)
 ```
 
 ## License
