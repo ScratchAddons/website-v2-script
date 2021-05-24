@@ -35,7 +35,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 				"---",
 				...fs.readFileSync(file, {encoding: "utf-8"})
 					.replace(/<script type="text\/javascript\+hugowrapper">'(.+)'<\/script>/g, "$1")
-					.replace("tx_gtsymbol", ">")
+					.replace(/tx_gtsymbol/g, ">")
 					.split(/\r?\n/)
 			]
 
