@@ -1,14 +1,10 @@
 const { 
-	gitEmail, 
-	gitName, 
 	contentGlobPatterns, 
 	translatableFrontMatterFields, 
 	excludedFrontMatterFields,
 	cleanUpGlobPatterns
 } = require("./consts.js")
 const fs = require("fs-extra")
-const globby = require("globby")
-const chalk = require("chalk")
 
 if (fs.existsSync("en/")) {
 	console.log("Cleaning up...")
