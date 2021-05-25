@@ -34,7 +34,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 				...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath]).trim().split(/\r?\n/) : []),
 				"---",
 				...fs.readFileSync(file, {encoding: "utf-8"})
-					.replace(/<script type="text\/javascript\+hugowrapper">'(.+)'<\/script>/g, "$1")
+					.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
 					.replace(/tx_gtsymbol/g, ">")
 					.split(/\r?\n/)
 			]
