@@ -35,7 +35,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 				"---",
 				...fs.readFileSync(file, {encoding: "utf-8"})
 					.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
-					.replace(/tx_gtsymbol/g, ">")
+					.replace(/https:\/\/scratchaddons\.com\/(.+?)#hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"/$1\" >}}")
+					.replace(/https:\/\/scratchaddons\.com#(.+?)_hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"$1\" >}}")
 					.split(/\r?\n/)
 			]
 
