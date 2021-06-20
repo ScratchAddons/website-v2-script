@@ -1,5 +1,14 @@
-const { gitEmail, gitName } = require("./consts.js")
+const { gitEmail, gitName, txOrgSlug, resourcesToPullWithAPI3: resourcesToFetchWithApi3 } = require("./consts.js")
 const globby = require("globby")
+
+require("../src/i18n/pull-resources-with-api-3")(
+	"./",
+	txOrgSlug, 
+	txToken,
+	{
+		resourcesToFetch: resourcesToPullWithAPI3
+	}
+)
 
 globby.sync(["*", "!en"], {
 	onlyDirectories: true
