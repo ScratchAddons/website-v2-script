@@ -1,4 +1,4 @@
-const { gitEmail, gitName, txOrgSlug, resourcesToPullWithAPI3: resourcesToFetchWithApi3 } = require("./consts.js")
+const { gitEmail, gitName, txOrgSlug, resourcesToPullWithAPI3, txToken } = require("./consts.js")
 const globby = require("globby")
 
 require("../src/i18n/pull-resources-with-api-3")(
