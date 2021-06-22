@@ -10,7 +10,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
 	// let translatableFrontMatterFields = options.translatableFrontMatterFields || []
 	
-	fs.ensureDir(hugoRepoPath)
+	fs.ensureDirSync(hugoRepoPath)
 
 	if (!languageCode) languageCode = path.basename(i18nLanguageDirPath)
 	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
@@ -21,7 +21,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	let htmlFrontYaml = fs.existsSync(i18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
 	let staticFrontYaml = fs.existsSync(eni18nLanguageDirPath + "static-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"})) : {}
 
-	if (Object.keys(htmlFrontYaml).length) Object.keys(enHtmlFrontYaml).forEach(filePath => {
+	if (htmlFrontYaml && Object.keys(htmlFrontYaml).length) Object.keys(enHtmlFrontYaml).forEach(filePath => {
 		if (!htmlFrontYaml[filePath]) htmlFrontYaml[filePath] = enHtmlFrontYaml[filePath]
 	})
 	else htmlFrontYaml = enHtmlFrontYaml
