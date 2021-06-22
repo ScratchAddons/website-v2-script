@@ -21,7 +21,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	let staticFrontYaml = fs.existsSync(eni18nLanguageDirPath + "static-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"})) : {}
 
 	;(() => {
-		const inputContentPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "static-html-content/"]
+		const inputContentPath = [i18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
 		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html"))
 
 		files.forEach(file => {
