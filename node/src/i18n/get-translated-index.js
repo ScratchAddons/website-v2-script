@@ -15,6 +15,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options =
 
 	const i18nStrings = yaml.parse(fs.readFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "utf-8"))
 
+	if (Object.keys(i18nStrings) === 0) return
 	if (!i18nStrings.IndexPage) return
 	if (!i18nStrings.IndexPage.Intro) return
 	if (!i18nStrings.IndexPage.Intro.Tagline) return
