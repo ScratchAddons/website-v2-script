@@ -35,15 +35,33 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 		if (!fs.existsSync(i18nLanguageDirPath + filePath)) return
 
-		if (filePath === "hugo-i18n.yml") {
+		if (filePath === "hugo-i18n.yml" || filePath === "html-front.yml") {
+
+			console.log(chalk`Remove untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
 
 			let result = removeSimilarEntries(
-				yaml.parse(fs.readFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "utf-8")),
-				yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "hugo-i18n.yml", "utf-8"))
+				yaml.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")),
+				yaml.parse(fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8"))
 			)
 
-			if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + "hugo-i18n.yml", yaml.stringify(result))
-			else fs.writeFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "")
+			if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result))
+			else {
+				if (filePath === "hugo-i18n.yml") fs.writeFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "")
+				else fs.removeSync(filePath)
+			}
+
+		// } else if (filePath === "html-front.yml") {
+
+		// 	console.log(chalk`Remove unused strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+
+		// 	let result = yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", "utf-8"))
+
+		// 	Object.keys(result).forEach(path => {
+		// 		if (!fs.existsSync(i18nLanguageDirPath + "html-content/" + path) && !fs.existsSync(eni18nLanguageDirPath + "static-html-content/" + path)) delete result[path]
+		// 	})
+
+		// 	if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + "html-front.yml", yaml.stringify(result))
+		// 	else fs.writeFileSync(i18nLanguageDirPath + "html-front.yml", "")
 
 		} else {
 
