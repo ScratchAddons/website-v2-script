@@ -15,4 +15,10 @@ globby.sync(["../i18n/*", "!../i18n/en"], {
 		"config.yml"
 	)
 
+	require("../src/i18n/get-translated-index")(
+		langPath + "/",
+		"../i18n/en/",
+		"data/translatedIndex.yml"
+	)
+
 })
