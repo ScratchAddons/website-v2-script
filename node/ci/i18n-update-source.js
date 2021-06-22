@@ -8,7 +8,10 @@ const fs = require("fs-extra")
 
 if (fs.existsSync("en/")) {
 	console.log("Cleaning up...")
-	require("../src/remove-glob")("en/", cleanUpGlobPatterns)
+	require("../src/remove-glob")(
+		"en/",
+		cleanUpGlobPatterns
+	)
 	console.log("All cleaned up!")
 }
 fs.ensureDirSync("en/")
