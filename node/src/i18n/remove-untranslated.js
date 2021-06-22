@@ -45,10 +45,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 			)
 
 			if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result))
-			else {
-				if (filePath === "hugo-i18n.yml") fs.writeFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "")
-				else fs.removeSync(i18nLanguageDirPath + filePath)
-			}
+			else fs.writeFileSync(i18nLanguageDirPath + filePath, "")
 
 		// } else if (filePath === "html-front.yml") {
 
