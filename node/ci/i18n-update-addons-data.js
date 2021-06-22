@@ -22,8 +22,8 @@ globby.sync(["./*", "!./en"], {
 	)
 
 	require("../src/i18n/remove-untranslated.js")(
-		"en/",
 		langPath + "/",
+		"en/",
 		{
 			globPatterns: ["addons-data.json"]
 		}
