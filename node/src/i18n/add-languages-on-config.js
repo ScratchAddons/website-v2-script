@@ -22,8 +22,7 @@ module.exports = (langaugeJsonPath, configPath, options = {}) => {
 	let languageCode = options.languageCode || undefined
 
 	if (!languageCode) {
-		const languageJsonPathPath = path.parse(langaugeJsonPath)
-		languageCode = path.basename(languageJsonPathPath.dir)
+		languageCode = path.basename(langaugeJsonPath)
 	}
 	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 

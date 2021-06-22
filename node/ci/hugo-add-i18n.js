@@ -11,7 +11,7 @@ globby.sync(["../i18n/*", "!../i18n/en"], {
 	)
 
 	require("../src/i18n/add-languages-on-config")(
-		langPath + "/language.json",
+		langPath + "/",
 		"config.yml"
 	)
 
