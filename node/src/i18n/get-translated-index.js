@@ -9,7 +9,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options =
 	const translatedIndex = fs.existsSync(ymlPath) ? yaml.parse(fs.readFileSync(ymlPath, "utf-8")) : []
 
 	if (!languageCode) {
-		languageCode = path.basename(langaugeJsonPath)
+		languageCode = path.basename(i18nLanguageDirPath)
 	}
 	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 

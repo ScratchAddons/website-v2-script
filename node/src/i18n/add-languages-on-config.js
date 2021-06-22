@@ -17,12 +17,12 @@ const getLanguageDisplayName = languageCode => {
 	}
 }
 
-module.exports = (langaugeJsonPath, configPath, options = {}) => {
+module.exports = (i18nLanguageDirPath, configPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 
 	if (!languageCode) {
-		languageCode = path.basename(langaugeJsonPath)
+		languageCode = path.basename(i18nLanguageDirPath)
 	}
 	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
