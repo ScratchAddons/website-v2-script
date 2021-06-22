@@ -1,6 +1,64 @@
 const fs = require("fs-extra")
 const ini = require("ini")
 const axios = require("axios").default
+const simpleGit = require("simple-git").default
+
+const getLanguagesToDownloadWithAPI = async (orgSlug, projectSlug, resourceSlug, headers, { minimum_perc: threshold, file_filter: filePattern, source_lang: sourceLanguageId }, git = simpleGit("./")) => {
+
+	console.log("Getting project languages to download...")
+
+	const languages = {}
+	let intlObj = new Intl.DisplayNames(["en"], {type: 'language'})
+
+	let statsRequestData = []
+	let requestPath = `/resource_language_stats?filter[project]=o:${orgSlug}:p:${projectSlug}&filter[resource]=o:${orgSlug}:p:${projectSlug}:r:${resourceSlug}`
+
+	while (requestPath) {
+		const statsRequest = await axios.get(`https://rest.api.transifex.com${requestPath}`, { headers }).catch(e => console.log(e.response.data.errors))
+
+		statsRequestData.push(...statsRequest.data.data)
+
+		requestPath = statsRequest.data.links.next
+	}
+
+	
+	// console.log("Threshold is " + threshold + "%")
+
+	for await (const language of statsRequestData) {
+		const languageCode = language.relationships.language.data.id.replace("l:", "")
+		if (languageCode === sourceLanguageId) continue
+		const attributes = language.attributes
+		const percentage = (attributes.translated_strings / attributes.total_strings)*100
+		// console.log(languageCode + " is " + percentage + "%")
+		if (percentage < threshold) continue
+		try {
+			const log = await git.log({ file: filePattern.replace("<lang>", languageCode) })
+			if (new Date(log.latest.date).getTime() >= new Date(attributes.last_update).getTime()) continue
+		} catch (e) {}
+		languages[languageCode] = intlObj.of(languageCode.replace("_", "-").toLowerCase())
+	}
+
+	return languages
+
+}
+
+const getLanguagesWithAPI = async (orgSlug, projectSlug, headers) => {
+
+	if (languagesCache[orgSlug + "." + projectSlug]) return languagesCache[orgSlug + "." + projectSlug]
+
+	console.log("Getting project languages...")
+
+	const languagesRequest = await axios.get(`https://rest.api.transifex.com/projects/o:${orgSlug}:p:${projectSlug}/languages`, { headers })
+
+	const languages = {}
+
+	languagesRequest.data.data.forEach(language => {
+		languages[language.attributes.code] = language.attributes.name
+	})
+
+	return languages
+
+}
 
 const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, languageCode, headers) => {
 
@@ -47,7 +105,7 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 				console.log(error.response.data.errors)
 			})
 
-		if (typeof checkRequest.data === "string") isReady = true
+		isReady = typeof checkRequest.data === "string"
 		
 	}
 
@@ -57,29 +115,11 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 }
 
-const languagesCache = {}
-
-const downloadLanguagesWithAPI = async (orgSlug, projectSlug, headers) => {
-
-	if (languagesCache[orgSlug + "." + projectSlug]) return languagesCache[orgSlug + "." + projectSlug]
-
-	console.log("Getting project languages...")
-
-	const languagesRequest = await axios.get(`https://rest.api.transifex.com/projects/o:${orgSlug}:p:${projectSlug}/languages`, { headers })
-
-	const languages = {}
-
-	languagesRequest.data.data.forEach(language => {
-		languages[language.attributes.code] = language.attributes.name
-	})
-
-	return languages
-
-}
-
 module.exports = async (i18nPath, orgSlug, token, options = {}) => {
 
 	console.log("Pulling resources using API 3.0...")
+
+	const git = simpleGit(i18nPath)
 
 	const resourcesToFetch = options.resourcesToFetch	
 	const headers = options.headers || {
@@ -104,16 +144,19 @@ module.exports = async (i18nPath, orgSlug, token, options = {}) => {
 		})
 	})
 
-	console.log(Object.keys(resources).length)
-
-	let languages = {}
+	console.log(Object.keys(resources))
+	
 
 	// Start downloading resources
 
 	for await (const resourceId of Object.keys(resources)) {
 
 		const [ projectSlug, resourceSlug ] = resourceId.split(".")
-		languages = await downloadLanguagesWithAPI(orgSlug, projectSlug, headers)
+
+		// let languages = downloadLanguagesWithAPI(orgSlug, projectSlug, headers)
+		let languages = await getLanguagesToDownloadWithAPI(orgSlug, projectSlug, resourceSlug, headers, resources[resourceId], git)
+
+		console.log(Object.keys(languages))
 		
 		for await (const languageCode of Object.keys(languages)) {
 
@@ -121,7 +164,7 @@ module.exports = async (i18nPath, orgSlug, token, options = {}) => {
 
 			const translation = await downloadResourcesWithAPI(orgSlug, projectSlug, resourceSlug, languageCode, headers)
 
-			fs.outputFileSync(`${i18nPath}${txConfig["scratch-addons-website"][resourceSlug].file_filter.replace("<lang>", languageCode)}`, translation)
+			fs.outputFileSync(`${i18nPath}${txConfig[projectSlug][resourceSlug].file_filter.replace("<lang>", languageCode)}`, translation)
 		
 		}
 	}
