@@ -38,6 +38,4 @@ module.exports = (i18nLanguageDirPath, configPath, options = {}) => {
 	}
 	fs.writeFileSync(configPath, yaml.stringify(config))
 
-	console.log("Done!")
-
 }
