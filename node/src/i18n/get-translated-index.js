@@ -6,7 +6,7 @@ const chalk = require("chalk")
 module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
-	const translatedIndex = fs.existsSync(ymlPath) ? yaml.parse(fs.readFileSync(ymlPath, "utf-8")) : []
+	const translatedIndex = fs.existsSync(ymlPath) ? yaml.parse(fs.readFileSync(ymlPath, "utf-8")) : ["en"]
 
 	if (!languageCode) {
 		languageCode = path.basename(i18nLanguageDirPath)

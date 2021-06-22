@@ -18,7 +18,7 @@ globby.sync(["../i18n/*", "!../i18n/en"], {
 	require("../src/i18n/get-translated-index")(
 		langPath + "/",
 		"../i18n/en/",
-		"data/translatedIndex.yml"
+		"data/translatedindex.yml"
 	)
 
 })
