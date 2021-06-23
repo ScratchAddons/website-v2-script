@@ -4,6 +4,22 @@ const yaml = require("yaml")
 const chalk = require("chalk")
 const htmlMinifier = require("html-minifier")
 
+const minifierOptions = {
+	collapseWhitespace: true,
+	conservativeCollapse: true,
+	collapseInlineTagWhitespace: true,
+	minifyCSS: true,
+	minifyJS: true,
+	preserveLineBreaks: true,
+	removeAttributeQuotes: true,
+	removeComments: true,
+	removeEmptyAttributes: true,
+	removeScriptTypeAttributes: true,
+	removeStyleLinkTypeAttributes: true,
+	ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/, /\{\{.+\}\}/ ],
+	processScripts: [ "application/ld+json" ]
+}
+
 const allIndex = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 
 module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
@@ -19,7 +35,10 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	console.log("Compiling en from Hugo format into i18n repo format...")
 
 	console.log(contentGlobPatterns.map(pattern => hugoRepoPath + "content/" + pattern))
-	let contentFiles = globby.sync(contentGlobPatterns.map(pattern => hugoRepoPath + "content/" + pattern))
+	let contentFiles = globby.sync(contentGlobPatterns.map(pattern => {
+		if (pattern.startsWith("!")) return "!" + hugoRepoPath + "content/" + pattern.slice("1")
+		return hugoRepoPath + "content/" + pattern
+	}))
 	let staticFrontYaml = {}
 
 	;(() => { 
@@ -33,45 +52,46 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 			let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
 			// console.log(fileLines)
 			let frontMatterSeparator = allIndex(fileLines, "---")
-			let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
-			const frontMatter = yaml.parse(frontMatterPart.join("\n"))
 
-			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all") return
-			console.log(chalk`Parsing {inverse ${filePath}}...`)
+			if (frontMatterSeparator.length >= 2) {
 
-			const frontMatterToTranslate = {}
-			const frontMatterToKeep = {}
-			Object.keys(frontMatter).forEach(key => {
-				if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
-				else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
-			})
-			if (Object.keys(frontMatterToTranslate).length > 0) htmlFrontYaml[filePath] = frontMatterToTranslate
-			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep
+				let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
+				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
+	
+				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
+				console.log(chalk`Parsing {inverse ${filePath}}...`)
+	
+				if (frontMatter) {
 
-			// fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }))
-			// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep, { lineWidth: 0 }))
+					const frontMatterToTranslate = {}
+					const frontMatterToKeep = {}
+					Object.keys(frontMatter).forEach(key => {
+						if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
+						else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
+					})
+					if (Object.keys(frontMatterToTranslate).length > 0) htmlFrontYaml[filePath] = frontMatterToTranslate
+					if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep	
 
-			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
-			let contentMinified = htmlMinifier.minify(contentPart.join("\n"), {
-				collapseWhitespace: true,
-				conservativeCollapse: true,
-				collapseInlineTagWhitespace: true,
-				minifyCSS: true,
-				minifyJS: true,
-				preserveLineBreaks: true,
-				removeAttributeQuotes: true,
-				removeComments: true,
-				removeEmptyAttributes: true,
-				removeScriptTypeAttributes: true,
-				removeStyleLinkTypeAttributes: true,
-				ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/, /\{\{.+\}\}/ ],
-				processScripts: [ "application/ld+json" ]
-			})
-				.replace(/(\n|^)(\{\{.+\}\})(\n|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
-				.replace(/\"?\{\{< ?(ref|relref) "\/(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com/$2#hugo-link-placeholder-$1")
-				.replace(/\"?\{\{< ?(ref|relref) "(?!\/)(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com#$2_hugo-link-placeholder-$1")
-			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
-			else fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+				}
+	
+				// fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }))
+				// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep, { lineWidth: 0 }))
+	
+				let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
+				let contentMinified = htmlMinifier.minify(contentPart.join("\n"), minifierOptions)
+					.replace(/(\n|^)(\{\{.+\}\})(\n|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
+					.replace(/\"?\{\{< ?(ref|relref) "\/(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com/$2#hugo-link-placeholder-$1")
+					.replace(/\"?\{\{< ?(ref|relref) "(?!\/)(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com#$2_hugo-link-placeholder-$1")
+				if (frontMatter && frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
+				else fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+
+			} else {
+
+				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
+				fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+
+			}
 
 		})
 
