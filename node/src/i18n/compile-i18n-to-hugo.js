@@ -36,8 +36,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		
 			const output = [
 				"---",
-				...((typeof htmlFrontYaml[filePath] !== "undefined") ? yaml.stringify(htmlFrontYaml[filePath]).trim().split(/\r?\n/) : []),
-				...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath]).trim().split(/\r?\n/) : []),
+				...((typeof htmlFrontYaml[filePath] !== "undefined") ? yaml.stringify(htmlFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
+				...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
 				"---",
 				...fs.readFileSync(file, {encoding: "utf-8"})
 					.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
@@ -65,7 +65,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 			if (typeof staticFrontYaml[filePath] !== "undefined") {
 				output = output.split("\n---\n")
-				output[0] += "\n" + yaml.stringify(staticFrontYaml[filePath]).trim()
+				output[0] += "\n" + yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim()
 				output = output.join("\n---\n")
 			}
 

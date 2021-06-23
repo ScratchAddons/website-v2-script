@@ -36,6 +36,6 @@ module.exports = (i18nLanguageDirPath, configPath, options = {}) => {
 		weight: 2,
 		contentDir: "content-i18n/" + languageCodeHugo
 	}
-	fs.writeFileSync(configPath, yaml.stringify(config))
+	fs.writeFileSync(configPath, yaml.stringify(config, { lineWidth: 0 }))
 
 }

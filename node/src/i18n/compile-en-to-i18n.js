@@ -48,8 +48,8 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 			if (Object.keys(frontMatterToTranslate).length > 0) htmlFrontYaml[filePath] = frontMatterToTranslate
 			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep
 
-			// fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatterToTranslate))
-			// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep))
+			// fs.outputFileSync(i18nRepoPath + "html-front/" + filePath + ".yml", yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }))
+			// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep, { lineWidth: 0 }))
 
 			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
 			let contentMinified = htmlMinifier.minify(contentPart.join("\n"), {
@@ -75,7 +75,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		})
 
-		if (Object.keys(htmlFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml))
+		if (Object.keys(htmlFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml, { lineWidth: 0 }))
 
 	})()
 
@@ -106,7 +106,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			let fileOutput = [
 				"---",
-				yaml.stringify(frontMatterToTranslate).trim(),
+				yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }).trim(),
 				"---",
 				contentPart.join("\n")
 			].join("\n")
@@ -117,7 +117,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		})
 
-		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml))
+		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml, { lineWidth: 0 }))
 
 	})()
 

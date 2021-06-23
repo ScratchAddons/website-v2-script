@@ -23,6 +23,6 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options =
 
 	console.log(chalk`Adding {inverse ${languageCodeHugo}} to the list of translated index page...`)
 	translatedIndex.push(languageCodeHugo)
-	fs.outputFileSync(ymlPath, yaml.stringify(translatedIndex))
+	fs.outputFileSync(ymlPath, yaml.stringify(translatedIndex, { lineWidth: 0 }))
 
 }

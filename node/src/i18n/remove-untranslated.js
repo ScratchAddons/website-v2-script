@@ -44,7 +44,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 				yaml.parse(fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8"))
 			)
 
-			if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result))
+			if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result, { lineWidth: 0 }))
 			else fs.writeFileSync(i18nLanguageDirPath + filePath, "")
 
 		// } else if (filePath === "html-front.yml") {
@@ -57,7 +57,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 		// 		if (!fs.existsSync(i18nLanguageDirPath + "html-content/" + path) && !fs.existsSync(eni18nLanguageDirPath + "static-html-content/" + path)) delete result[path]
 		// 	})
 
-		// 	if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + "html-front.yml", yaml.stringify(result))
+		// 	if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + "html-front.yml", yaml.stringify(result, { lineWidth: 0 }))
 		// 	else fs.writeFileSync(i18nLanguageDirPath + "html-front.yml", "")
 
 		} else {
