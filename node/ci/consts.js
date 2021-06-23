@@ -3,7 +3,7 @@ module.exports = {
 	gitName: "scratchaddons-bot[bot]",
 	contentGlobPatterns: [
 		"*",
-		"!contributor.html",
+		"!contributors.html",
 		"docs/**",
 		"!docs/faq.md",        // Hold until it is deemed to be fine to be translated
 		"!docs/privacy/**",    // Decided not to translate
