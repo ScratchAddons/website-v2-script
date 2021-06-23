@@ -88,6 +88,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 			} else {
 
 				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				staticFrontYaml[filePath] = false
 				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
 				fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
@@ -108,32 +109,41 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
 			let frontMatterSeparator = allIndex(fileLines, "---")
-			let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
-			const frontMatter = yaml.parse(frontMatterPart.join("\n"))
 
-			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all") return
-			console.log(chalk`Parsing {inverse ${filePath}}...`)
+			if (frontMatterSeparator.length >= 2) {
 
-			const frontMatterToTranslate = {}
-			const frontMatterToKeep = {}
-			Object.keys(frontMatter).forEach(key => {
-				if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
-				else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
-			})
-			if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep	
+				let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
+				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
+	
+				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
+				console.log(chalk`Parsing {inverse ${filePath}}...`)
+	
+				const frontMatterToTranslate = {}
+				const frontMatterToKeep = {}
+				Object.keys(frontMatter).forEach(key => {
+					if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
+					else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
+				})
+				if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep	
+	
+				let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)
+	
+				let fileOutput = [
+					"---",
+					yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }).trim(),
+					"---",
+					contentPart.join("\n")
+				].join("\n")
+	
+				if (frontMatter && frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+				else fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
 
-			let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)
+			} else {
 
-			let fileOutput = [
-				"---",
-				yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }).trim(),
-				"---",
-				contentPart.join("\n")
-			].join("\n")
-
-			if (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
-			else fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
-
+				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				staticFrontYaml[filePath] = false
+				fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
+			}
 
 		})
 

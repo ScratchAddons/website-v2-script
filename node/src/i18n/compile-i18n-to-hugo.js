@@ -33,21 +33,30 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		files.forEach(file => {
 			let filePath = file.split("html-content/")[1]
 			console.log(chalk`Parsing {inverse ${filePath}}...`)
-		
-			const output = [
-				"---",
-				...((typeof htmlFrontYaml[filePath] !== "undefined") ? yaml.stringify(htmlFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
-				...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
-				"---",
-				...fs.readFileSync(file, {encoding: "utf-8"})
-					.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
-					.replace(/https:\/\/scratchaddons\.com\/(.+?)#hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"/$1\" >}}")
-					.replace(/https:\/\/scratchaddons\.com#(.+?)_hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"$1\" >}}")
-					 // HOTFIX: Remove after all instance of &lt;a and tx_gtsymbol gone on i18n repo
-					.replace(/tx_gtsymbol/g, ">").replace(/&lt;a/g, "<a")
-					.split(/\r?\n/)
-			]
 
+			let output
+
+			if (staticFrontYaml[filePath] !== false) {
+
+				output = [
+					"---",
+					...((typeof htmlFrontYaml[filePath] !== "undefined") ? yaml.stringify(htmlFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
+					...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
+					"---",
+					...fs.readFileSync(file, {encoding: "utf-8"})
+						.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
+						.replace(/https:\/\/scratchaddons\.com\/(.+?)#hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"/$1\" >}}")
+						.replace(/https:\/\/scratchaddons\.com#(.+?)_hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"$1\" >}}")
+						 // HOTFIX: Remove after all instance of &lt;a and tx_gtsymbol gone on i18n repo
+						.replace(/tx_gtsymbol/g, ">").replace(/&lt;a/g, "<a")
+						.split(/\r?\n/)
+				]
+	
+			} else {
+
+				output = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
+			}
+		
 			fs.outputFileSync(`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`, output.join("\n"))
 
 		})
@@ -63,13 +72,12 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
 
-			if (typeof staticFrontYaml[filePath] !== "undefined") {
+			if (staticFrontYaml[filePath] !== false && typeof staticFrontYaml[filePath] !== "undefined") {
 				output = output.split("\n---\n")
 				output[0] += "\n" + yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim()
 				output = output.join("\n---\n")
-			}
+			}	
 
-			let occurence = 0
 			fs.outputFileSync(
 				`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`,
 				output
