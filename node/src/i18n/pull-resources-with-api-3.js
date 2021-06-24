@@ -131,6 +131,12 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 		isReady = typeof checkRequest.data === "string"
 
+		if (checkRequest.data.data.attributes.errors.filter(item => item.code === "parse_error").length) {
+			console.error("Something went wrong on the server...")
+			checkRequest.data.data.attributes.errors.forEach(item => console.error(item.detail))
+			return false
+		}
+
 		if (!isReady) {
 			console.log("::group::Data")
 			console.log(JSON.stringify(checkRequest.data))
