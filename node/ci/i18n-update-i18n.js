@@ -19,7 +19,7 @@ const resourcesClient = {}
 const resourcesAPI3 = {}
 
 Object.keys(resources).forEach(resource => {
-	if (resourcesToPullWithAPI3.filter(item => item.startsWith("type:")).map(item => item.replace("type:", "")).includes(resource.type)) {
+	if (resourcesToPullWithAPI3.filter(item => item.startsWith("type:")).map(item => item.replace("type:", "")).includes(resources[resource].type)) {
 		resourcesAPI3[resource] = resources[resource]
 		return
 	}
