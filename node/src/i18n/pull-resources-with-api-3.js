@@ -1,8 +1,8 @@
 const fs = require("fs-extra")
-const ini = require("ini")
 const axios = require("axios").default
-const matcher = require("matcher")
 const simpleGit = require("simple-git").default
+const chalk = require("chalk")
+
 const sleep = (ms = 0) => new Promise(r => setTimeout(r, ms))
 
 const getLanguagesToDownloadWithAPI = async (orgSlug, projectSlug, resourceSlug, headers, { minimum_perc: threshold, file_filter: filePattern, source_lang: sourceLanguageId }, git = simpleGit("./")) => {
