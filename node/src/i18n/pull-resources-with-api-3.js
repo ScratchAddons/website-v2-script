@@ -119,17 +119,23 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 			try {
 				if (checkRequest.data.data.attributes.errors.filter(item => item.code === "parse_error").length) {
-					console.error("Something went wrong on the server...")
+					console.error("Something went wrong on the server.")
 					checkRequest.data.data.attributes.errors.forEach(item => console.error(item.detail))
 					return false
 				}
 			} catch (e) {}
+
+			if (checkRequest.data.data.attributes.status !== "processing") {
+				console.error("Something went wrong.")
+				checkRequest.data.data.attributes.errors.forEach(item => console.error(item.detail))
+				return false
+			}
 		}
 
-		if (attempts === 100) {
-			console.error("Something went horribly wrong here...")
-			return false
-		}
+		// if (attempts === 100) {
+		// 	console.error("Something went horribly wrong here...")
+		// 	return false
+		// }
 
 	}
 
