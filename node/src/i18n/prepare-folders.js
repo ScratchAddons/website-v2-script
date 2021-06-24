@@ -19,7 +19,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 	folders.forEach(folder => {
 
 		let folderPath = folder.split(eni18nLanguageDirPath)[1]
-		console.log(chalk`Ensuring {inverse ${folderPath}} exists...`)
+		// console.log(chalk`Ensuring {inverse ${folderPath}} exists...`)
 		fs.ensureDirSync(i18nLanguageDirPath + folderPath)
 
 	})
