@@ -141,7 +141,7 @@ module.exports = async (i18nPath, orgSlug, token, resourceId, resource, options 
 
 	if (!Object.keys(languages).length) {
 		console.log(chalk`No languages ready in {inverse ${resourceSlug}}. Skipping.`)
-		continue
+		return
 	}
 
 	console.log(Object.keys(languages))
