@@ -174,7 +174,7 @@ module.exports = async (i18nPath, orgSlug, token, resourceId, resource, options 
 	
 	for await (const languageCode of Object.keys(languages)) {
 
-		console.log(chalk`Downloading ${languages[languageCode]} (${languageCode})`)
+		console.log(chalk`Downloading ${languages[languageCode]} (${languageCode})...`)
 
 		const translation = await downloadResourcesWithAPI(orgSlug, projectSlug, resourceSlug, languageCode, headers)
 

@@ -42,7 +42,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 				yaml.parse(fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8"))
 			)
 
-			if (JSON.stringify(result) !== JSON.stringify(yaml.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")))) return
+			if (JSON.stringify(result) === JSON.stringify(yaml.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")))) return
 
 			console.log(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
 
