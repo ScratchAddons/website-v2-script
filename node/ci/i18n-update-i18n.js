@@ -31,7 +31,12 @@ Object.keys(resources).forEach(resource => {
 	resourcesClient[resource] = resources[resource]
 })
 
+console.log(Object.keys(resourcesAPI3))
+console.log(Object.keys(resourcesClient))
+
 ;(async () => {
+
+	console.log("aaaa")
 
 	for await (const resource of Object.keys(resourcesClient)) {
 		console.log(chalk`Pulling {inverse ${resource.split(".")[1]}} using the client...`)
