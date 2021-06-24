@@ -24,19 +24,19 @@ const getLanguagesToDownloadWithAPI = async (orgSlug, projectSlug, resourceSlug,
 	}
 
 	
-	console.log("Threshold is " + threshold + "%")
+	// console.log("Threshold is " + threshold + "%")
 
 	for await (const language of statsRequestData) {
 		const languageCode = language.relationships.language.data.id.replace("l:", "")
 		if (languageCode === sourceLanguageId) continue
 		const attributes = language.attributes
 		const percentage = (attributes.translated_strings / attributes.total_strings)*100
-		console.log(languageCode + " is " + percentage + "%")
+		// console.log(languageCode + " is " + percentage + "%")
 		if (percentage < threshold) continue
 		try {
 			const log = await git.log({ file: filePattern.replace("<lang>", languageCode) })
-			console.log(new Date(log.latest.date).getTime())
-			console.log(new Date(attributes.last_update).getTime())
+			// console.log(new Date(log.latest.date).getTime())
+			// console.log(new Date(attributes.last_update).getTime())
 			if (new Date(log.latest.date).getTime() >= new Date(attributes.last_update).getTime()) continue
 		} catch (e) {}
 		languages[languageCode] = intlObj.of(languageCode.replace("_", "-").toLowerCase())
@@ -67,6 +67,35 @@ const getLanguagesWithAPI = async (orgSlug, projectSlug, headers) => {
 const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, languageCode, headers) => {
 
 	console.log("Sending download request...")
+
+	console.log(orgSlug)
+	console.log(projectSlug)
+	console.log(resourceSlug)
+	console.log(languageCode)
+	console.log(headers)
+	console.log({
+		"attributes": {
+			"content_encoding": "text",
+			"file_type": "default",
+			"mode": "default",
+			"pseudo": false
+		},
+		"relationships": {
+			"language": {
+				"data": {
+					"id": `l:${languageCode}`,
+					"type": "languages"
+				}
+			},
+			"resource": {
+				"data": {
+					"id": `o:${orgSlug}:p:${projectSlug}:r:${resourceSlug}`,
+					"type": "resources"
+				}
+			}
+		},
+		"type": "resource_translations_async_downloads"
+	})
 
 	const downloadRequest = await axios.post("https://rest.api.transifex.com/resource_translations_async_downloads", {
 		"data": {
@@ -113,7 +142,7 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 		await sleep(500)
 
-		if (attempts === 50) {
+		if (attempts === 20) {
 			console.error(checkRequest)
 			throw Error("Something went horribly wrong here...")
 		}
