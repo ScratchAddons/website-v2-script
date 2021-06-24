@@ -24,17 +24,19 @@ const getLanguagesToDownloadWithAPI = async (orgSlug, projectSlug, resourceSlug,
 	}
 
 	
-	// console.log("Threshold is " + threshold + "%")
+	console.log("Threshold is " + threshold + "%")
 
 	for await (const language of statsRequestData) {
 		const languageCode = language.relationships.language.data.id.replace("l:", "")
 		if (languageCode === sourceLanguageId) continue
 		const attributes = language.attributes
 		const percentage = (attributes.translated_strings / attributes.total_strings)*100
-		// console.log(languageCode + " is " + percentage + "%")
+		console.log(languageCode + " is " + percentage + "%")
 		if (percentage < threshold) continue
 		try {
 			const log = await git.log({ file: filePattern.replace("<lang>", languageCode) })
+			console.log(new Date(log.latest.date).getTime())
+			console.log(new Date(attributes.last_update).getTime())
 			if (new Date(log.latest.date).getTime() >= new Date(attributes.last_update).getTime()) continue
 		} catch (e) {}
 		languages[languageCode] = intlObj.of(languageCode.replace("_", "-").toLowerCase())
@@ -100,6 +102,8 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 	while (!isReady) {
 
+		if (attempts === 50) throw Error("Something went horribly wrong here...")
+
 		console.log(`Checking status... (attempt ${attempts++})`)
 
 		checkRequest = await axios.get(checkRequestUrl, { headers })
@@ -110,7 +114,9 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 		isReady = typeof checkRequest.data === "string"
 
 		await sleep(500)
-		
+
+		console.log(checkRequest)
+
 	}
 
 	console.log("Translation downloaded.")
