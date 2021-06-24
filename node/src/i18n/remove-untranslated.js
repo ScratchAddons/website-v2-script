@@ -8,7 +8,7 @@ const yaml = require("yaml")
 const removeSimilarEntries = (objectTarget, objectReference) => {
 
 	Object.keys(objectReference).forEach(keys => {
-		if (!objectTarget[keys]) return
+		if (!objectTarget || !objectTarget[keys]) return
 		if (typeof objectReference[keys] === "object") {
 			objectTarget[keys] = removeSimilarEntries(objectTarget[keys], objectReference[keys])
 			if (Object.keys(objectTarget[keys]).length === 0) delete objectTarget[keys]
