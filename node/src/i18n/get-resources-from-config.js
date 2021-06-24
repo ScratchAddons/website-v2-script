@@ -1,3 +1,6 @@
+const fs = require("fs-extra")
+const ini = require("ini")
+
 module.exports = (i18nPath) => {
 	console.log("Getting list of resources...")
 
