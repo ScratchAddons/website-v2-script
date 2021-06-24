@@ -156,6 +156,11 @@ module.exports = async (i18nPath, orgSlug, token, options = {}) => {
 		// let languages = downloadLanguagesWithAPI(orgSlug, projectSlug, headers)
 		let languages = await getLanguagesToDownloadWithAPI(orgSlug, projectSlug, resourceSlug, headers, resources[resourceId], git)
 
+		if (!Object.keys(languages).length) {
+			console.log("No languages present. Skipping.")
+			continue
+		}
+
 		console.log(Object.keys(languages))
 		
 		for await (const languageCode of Object.keys(languages)) {
