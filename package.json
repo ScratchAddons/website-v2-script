@@ -19,10 +19,12 @@
   "dependencies": {
     "axios": "^0.21.1",
     "chalk": "^4.1.1",
+    "cross-spawn": "^7.0.3",
     "fs-extra": "^10.0.0",
     "globby": "^11.0.3",
     "html-minifier": "^4.0.0",
     "ini": "^2.0.0",
+    "matcher": "^4.0.0",
     "prettier": "^2.3.0",
     "simple-git": "^2.39.0",
     "yaml": "^2.0.0-6"

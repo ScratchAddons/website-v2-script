@@ -59,7 +59,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
 	
 				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
-				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				console.log(chalk`Compiling {inverse ${filePath}}...`)
 	
 				if (frontMatter) {
 
@@ -87,7 +87,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			} else {
 
-				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				console.log(chalk`Compiling {inverse ${filePath}}...`)
 				staticFrontYaml[filePath] = false
 				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
 				fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
@@ -116,7 +116,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
 	
 				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
-				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				console.log(chalk`Compiling {inverse ${filePath}}...`)
 	
 				const frontMatterToTranslate = {}
 				const frontMatterToKeep = {}
@@ -140,7 +140,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			} else {
 
-				console.log(chalk`Parsing {inverse ${filePath}}...`)
+				console.log(chalk`Compiling {inverse ${filePath}}...`)
 				staticFrontYaml[filePath] = false
 				fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
 			}

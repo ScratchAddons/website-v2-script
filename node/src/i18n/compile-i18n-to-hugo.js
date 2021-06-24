@@ -32,7 +32,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 		files.forEach(file => {
 			let filePath = file.split("html-content/")[1]
-			console.log(chalk`Parsing {inverse ${filePath}}...`)
+			console.log(chalk`Compiling {inverse ${filePath}}...`)
 
 			let output
 
@@ -68,7 +68,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 		files.forEach(file => {
 			let filePath = file.split("markdown/")[1]
-			console.log(chalk`Parsing {inverse ${filePath}}...`)
+			console.log(chalk`Compiling {inverse ${filePath}}...`)
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
 

@@ -15,5 +15,5 @@ module.exports = {
 	cleanUpGlobPatterns: ["**", "!addons-data.json"],
 	txOrgSlug: "scratch-addons",
 	txToken: process.env.TX_TOKEN,
-	resourcesToPullWithAPI3: ["GITHUBMARKDOWN"]
+	resourcesToPullWithAPI3: ["type:GITHUBMARKDOWN"]
 }
