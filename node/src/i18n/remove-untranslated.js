@@ -37,14 +37,16 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 		if (filePath === "hugo-i18n.yml" || filePath === "html-front.yml") {
 
-			console.log(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
-
 			let result = removeSimilarEntries(
 				yaml.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")),
 				yaml.parse(fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8"))
 			)
 
-			if (Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result, { lineWidth: 0 }))
+			if (JSON.stringify(result) !== JSON.stringify(JSON.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")))) return
+
+			console.log(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+
+			if (result && Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result, { lineWidth: 0 }))
 			else fs.writeFileSync(i18nLanguageDirPath + filePath, "")
 
 		// } else if (filePath === "html-front.yml") {
