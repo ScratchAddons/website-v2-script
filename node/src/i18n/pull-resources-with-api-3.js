@@ -98,28 +98,17 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 	})
 
 	const downloadRequest = await axios.post("https://rest.api.transifex.com/resource_translations_async_downloads", {
-		"data": {
-			"attributes": {
-				"content_encoding": "text",
-				"file_type": "default",
-				"mode": "default",
-				"pseudo": false
-			},
-			"relationships": {
-				"language": {
-					"data": {
-						"id": `l:${languageCode}`,
-						"type": "languages"
-					}
-				},
-				"resource": {
-					"data": {
-						"id": `o:${orgSlug}:p:${projectSlug}:r:${resourceSlug}`,
-						"type": "resources"
-					}
-				}
-			},
-			"type": "resource_translations_async_downloads"
+		"language": {
+			"data": {
+				"id": `l:${languageCode}`,
+				"type": "languages"
+			}
+		},
+		"resource": {
+			"data": {
+				"id": `o:${orgSlug}:p:${projectSlug}:r:${resourceSlug}`,
+				"type": "resources"
+			}
 		}
 	}, { headers })
 
