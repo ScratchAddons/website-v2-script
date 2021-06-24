@@ -131,11 +131,16 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 		isReady = typeof checkRequest.data === "string"
 
-		await sleep(500)
+		if (!isReady) {
+			console.log("::group::Data")
+			console.log(JSON.stringify(checkRequest.data))
+			console.log(checkRequest.data)
+			console.log("::endgroup::")
+		}
 
-		if (attempts === 20) {
-			console.error(checkRequest)
-			throw Error("Something went horribly wrong here...")
+		if (attempts === 100) {
+			console.error("Something went horribly wrong here...")
+			return false
 		}
 
 	}
@@ -179,7 +184,7 @@ module.exports = async (i18nPath, orgSlug, token, resourceId, resource, options 
 
 		const translation = await downloadResourcesWithAPI(orgSlug, projectSlug, resourceSlug, languageCode, headers)
 
-		fs.outputFileSync(`${i18nPath}${resource.file_filter.replace("<lang>", languageCode)}`, translation)
+		if (translation) fs.outputFileSync(`${i18nPath}${resource.file_filter.replace("<lang>", languageCode)}`, translation)
 	
 	}
 
