@@ -24,6 +24,6 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 	})
 
-	console.log("Preparation done!")
+	// console.log("Preparation done!")
 
 }
