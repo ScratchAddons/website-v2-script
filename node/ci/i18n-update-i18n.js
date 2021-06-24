@@ -42,7 +42,10 @@ console.log(Object.keys(resourcesClient))
 	for await (const resource of Object.keys(resourcesClient)) {
 		console.log(chalk`Pulling {inverse ${resource.split(".")[1]}} using the client...`)
 		const result = spawn.sync("tx", ["pull", "--all", "--use-git-timestamps", "--skip", "--mode", "sourceastranslation", "--resource", resource])
+		console.log(result.stdout.toString())
 		if (result.status !== 0) {
+			console.log(result.stderr.toString())
+			console.log(`Run returned status code ${result.status}. Fetching using API 3...`)
 			await require("../src/i18n/pull-resources-with-api-3")(
 				"./",
 				txOrgSlug, 
