@@ -68,26 +68,6 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 	console.log("Sending download request...")
 
-	console.log(orgSlug)
-	console.log(projectSlug)
-	console.log(resourceSlug)
-	console.log(languageCode)
-	console.log(headers)
-	console.log({
-		"language": {
-			"data": {
-				"id": `l:${languageCode}`,
-				"type": "languages"
-			}
-		},
-		"resource": {
-			"data": {
-				"id": `o:${orgSlug}:p:${projectSlug}:r:${resourceSlug}`,
-				"type": "resources"
-			}
-		}
-	})
-
 	const downloadRequest = await axios.post("https://rest.api.transifex.com/resource_translations_async_downloads", {
 		"data": {
 			"attributes": {
@@ -131,17 +111,19 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 		isReady = typeof checkRequest.data === "string"
 
-		if (checkRequest.data.data.attributes.errors.filter(item => item.code === "parse_error").length) {
-			console.error("Something went wrong on the server...")
-			checkRequest.data.data.attributes.errors.forEach(item => console.error(item.detail))
-			return false
-		}
-
 		if (!isReady) {
 			console.log("::group::Data")
 			console.log(JSON.stringify(checkRequest.data))
 			console.log(checkRequest.data)
 			console.log("::endgroup::")
+
+			try {
+				if (checkRequest.data.data.attributes.errors.filter(item => item.code === "parse_error").length) {
+					console.error("Something went wrong on the server...")
+					checkRequest.data.data.attributes.errors.forEach(item => console.error(item.detail))
+					return false
+				}
+			} catch (e) {}
 		}
 
 		if (attempts === 100) {
