@@ -102,8 +102,6 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 	while (!isReady) {
 
-		if (attempts === 50) throw Error("Something went horribly wrong here...")
-
 		console.log(`Checking status... (attempt ${attempts++})`)
 
 		checkRequest = await axios.get(checkRequestUrl, { headers })
@@ -115,7 +113,10 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 		await sleep(500)
 
-		console.log(checkRequest)
+		if (attempts === 50) {
+			console.error(checkRequest)
+			throw Error("Something went horribly wrong here...")
+		}
 
 	}
 
@@ -143,7 +144,7 @@ module.exports = async (i18nPath, orgSlug, token, resourceId, resource, options 
 	console.log(chalk`Pulling {inverse ${resourceSlug}} using API 3.0...`)
 
 	// let languages = downloadLanguagesWithAPI(orgSlug, projectSlug, headers)
-	let languages = await getLanguagesToDownloadWithAPI(orgSlug, projectSlug, resourceSlug, headers, resourceId, git)
+	let languages = await getLanguagesToDownloadWithAPI(orgSlug, projectSlug, resourceSlug, headers, resource, git)
 
 	if (!Object.keys(languages).length) {
 		console.log(chalk`No languages ready in {inverse ${resourceSlug}}. Skipping.`)
