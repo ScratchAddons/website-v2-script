@@ -1,7 +1,9 @@
 const fs = require("fs-extra")
 const ini = require("ini")
 const axios = require("axios").default
+const matcher = require("matcher")
 const simpleGit = require("simple-git").default
+const sleep = (ms = 0) => new Promise(r => setTimeout(r, ms))
 
 const getLanguagesToDownloadWithAPI = async (orgSlug, projectSlug, resourceSlug, headers, { minimum_perc: threshold, file_filter: filePattern, source_lang: sourceLanguageId }, git = simpleGit("./")) => {
 
@@ -106,6 +108,8 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 			})
 
 		isReady = typeof checkRequest.data === "string"
+
+		await sleep(500)
 		
 	}
 
@@ -115,13 +119,10 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 
 }
 
-module.exports = async (i18nPath, orgSlug, token, options = {}) => {
-
-	console.log("Pulling resources using API 3.0...")
+module.exports = async (i18nPath, orgSlug, token, resourceId, resource, options = {}) => {
 
 	const git = simpleGit(i18nPath)
 
-	const resourcesToFetch = options.resourcesToFetch	
 	const headers = options.headers || {
 		"Authorization": `Bearer ${token}`,
 		"Content-Type": "application/vnd.api+json"
@@ -129,49 +130,30 @@ module.exports = async (i18nPath, orgSlug, token, options = {}) => {
 
 	headers.Authorization = `Bearer ${token}`
 	
-	// Figure out what resources to fetch
-
-	console.log("Getting list of resources...")
-
-	const txConfig = ini.parse(fs.readFileSync(`${i18nPath}.tx/config`, "utf-8"))
-
-	const resources = {}
-
-	Object.keys(txConfig).filter(el => el !== "main").forEach(projectSlug => {
-		Object.keys(txConfig[projectSlug]).forEach(resourceSlug => {
-			if (!resourcesToFetch.includes(txConfig[projectSlug][resourceSlug].type)) return
-			resources[projectSlug + "." + resourceSlug] = txConfig[projectSlug][resourceSlug]
-		})
-	})
-
-	console.log(Object.keys(resources))
-	
-
 	// Start downloading resources
 
-	for await (const resourceId of Object.keys(resources)) {
+	const [ projectSlug, resourceSlug ] = resourceId.split(".")
 
-		const [ projectSlug, resourceSlug ] = resourceId.split(".")
+	console.log(chalk`Pulling {inverse ${resourceSlug}} using API 3.0...`)
 
-		// let languages = downloadLanguagesWithAPI(orgSlug, projectSlug, headers)
-		let languages = await getLanguagesToDownloadWithAPI(orgSlug, projectSlug, resourceSlug, headers, resources[resourceId], git)
+	// let languages = downloadLanguagesWithAPI(orgSlug, projectSlug, headers)
+	let languages = await getLanguagesToDownloadWithAPI(orgSlug, projectSlug, resourceSlug, headers, resourceId, git)
 
-		if (!Object.keys(languages).length) {
-			console.log("No languages present. Skipping.")
-			continue
-		}
+	if (!Object.keys(languages).length) {
+		console.log(chalk`No languages ready in {inverse ${resourceSlug}}. Skipping.`)
+		continue
+	}
 
-		console.log(Object.keys(languages))
-		
-		for await (const languageCode of Object.keys(languages)) {
+	console.log(Object.keys(languages))
+	
+	for await (const languageCode of Object.keys(languages)) {
 
-			console.log(`Downloading ${resourceSlug}, ${languages[languageCode]} (${languageCode})`)
+		console.log(chalk`Downloading ${languages[languageCode]} (${languageCode})`)
 
-			const translation = await downloadResourcesWithAPI(orgSlug, projectSlug, resourceSlug, languageCode, headers)
+		const translation = await downloadResourcesWithAPI(orgSlug, projectSlug, resourceSlug, languageCode, headers)
 
-			fs.outputFileSync(`${i18nPath}${txConfig[projectSlug][resourceSlug].file_filter.replace("<lang>", languageCode)}`, translation)
-		
-		}
+		fs.outputFileSync(`${i18nPath}${resource.file_filter.replace("<lang>", languageCode)}`, translation)
+	
 	}
 
 	console.log("Done!")
