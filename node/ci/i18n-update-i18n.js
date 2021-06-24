@@ -1,6 +1,7 @@
 const { gitEmail, gitName, txOrgSlug, resourcesToPullWithAPI3, txToken } = require("./consts.js")
 const globby = require("globby")
 const spawn = require("cross-spawn")
+const chalk = require("chalk")
 
 globby.sync(["*", "!en"], {
 	onlyDirectories: true
