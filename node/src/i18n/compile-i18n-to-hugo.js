@@ -3,6 +3,7 @@ const globby = require("globby")
 const path = require("path")
 const chalk = require("chalk")
 const yaml = require("yaml")
+const { addMissingEntries } = require("../recursive-object-functions")
 
 module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
 
@@ -21,10 +22,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	let htmlFrontYaml = fs.existsSync(i18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
 	let staticFrontYaml = fs.existsSync(eni18nLanguageDirPath + "static-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"})) : {}
 
-	if (htmlFrontYaml && Object.keys(htmlFrontYaml).length) Object.keys(enHtmlFrontYaml).forEach(filePath => {
-		if (!htmlFrontYaml[filePath]) htmlFrontYaml[filePath] = enHtmlFrontYaml[filePath]
-	})
-	else htmlFrontYaml = enHtmlFrontYaml
+	htmlFrontYaml = addMissingEntries(htmlFrontYaml, enHtmlFrontYaml)
 
 	;(() => {
 		const inputContentPath = [i18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]

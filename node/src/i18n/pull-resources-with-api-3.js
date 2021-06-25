@@ -132,6 +132,8 @@ const downloadResourcesWithAPI = async (orgSlug, projectSlug, resourceSlug, lang
 			}
 		}
 
+		await sleep(500)
+
 		// if (attempts === 100) {
 		// 	console.error("Something went horribly wrong here...")
 		// 	return false
