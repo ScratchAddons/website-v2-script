@@ -31,22 +31,3 @@ module.exports = {
 	removeSimilarEntries,
 	addMissingEntries
 }
-
-var testTarget = {}
-
-var testReference ={
-	"a": 1,
-	"b": 2,
-	"c": 3,
-	"d": {
-		"a": 2,
-		"b": 3,
-		"c": 4
-	},
-	"e": {
-		"a": 1,
-		"b": 2
-	}
-}
-
-console.log(addMissingEntries(testTarget, testReference))
