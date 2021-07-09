@@ -79,7 +79,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	
 				let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
 				let contentMinified = htmlMinifier.minify(contentPart.join("\n"), minifierOptions)
-					.replace(/(\n|^)(\{\{.+\}\})(\n|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
+					.replace(/(^|[\n>])(\{\{.+\}\})([\n<]|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
 					.replace(/\"?\{\{< ?(ref|relref) "\/(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com/$2#hugo-link-placeholder-$1")
 					.replace(/\"?\{\{< ?(ref|relref) "(?!\/)(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com#$2_hugo-link-placeholder-$1")
 				if (frontMatter && frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
