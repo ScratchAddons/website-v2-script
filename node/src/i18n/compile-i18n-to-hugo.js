@@ -76,10 +76,14 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 				output[0] += "\n" + yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim()
 			}
 
-			const excludedTags = ["title", "textarea", "style", "xmp", "iframe", "noembed", "noframes", "script", "plaintext"]
+			if (output[1]) {
 
-			output[2] = output[2]
-				.replace(new RegExp(`<\/?(\s*?)(${excludedTags.join("|")})(.*?)>`, "g"), "&lt;$1$2$3>")
+				const excludedTags = ["title", "textarea", "style", "xmp", "iframe", "noembed", "noframes", "script", "plaintext"]
+				
+				output[1] = output[1]
+					.replace(new RegExp(`<\/?(\s*?)(${excludedTags.join("|")})(.*?)>`, "g"), "&lt;$1$2$3>")
+
+			}
 
 			output = output.join("\n---\n")
 
