@@ -70,11 +70,18 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
 
+			output = output.split("\n---\n")
+
 			if (staticFrontYaml[filePath] !== false && typeof staticFrontYaml[filePath] !== "undefined") {
-				output = output.split("\n---\n")
 				output[0] += "\n" + yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim()
-				output = output.join("\n---\n")
-			}	
+			}
+
+			const excludedTags = ["title", "textarea", "style", "xmp", "iframe", "noembed", "noframes", "script", "plaintext"]
+
+			output[2] = output[2]
+				.replace(new RegExp(`<\/?(\s*?)(${excludedTags.join("|")})(.*?)>`, "g"), "&lt;$1$2$3>")
+
+			output = output.join("\n---\n")
 
 			fs.outputFileSync(
 				`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`,
