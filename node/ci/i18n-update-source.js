@@ -4,7 +4,9 @@ const {
 	excludedFrontMatterFields,
 	cleanUpGlobPatterns,
 	txOrgSlug,
-	txProjectSlug
+	txProjectSlug,
+	gitEmail,
+	gitName
 } = require("./consts.js")
 const fs = require("fs-extra")
 
