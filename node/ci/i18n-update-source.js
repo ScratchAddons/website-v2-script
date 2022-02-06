@@ -4,7 +4,9 @@ const {
 	excludedFrontMatterFields,
 	cleanUpGlobPatterns,
 	txOrgSlug,
-	txProjectSlug
+	txProjectSlug,
+	gitEmail,
+	gitName
 } = require("./consts.js")
 const fs = require("fs-extra")
 
@@ -27,7 +29,7 @@ require("../src/i18n/compile-en-to-i18n.js")(
 	}
 )
 
-require("../src/i18n/bulk-mapping")(".", txOrgSlug, txProjectSlug)
+require("../src/i18n/bulk-mapping")("./", txOrgSlug, txProjectSlug)
 
 ;(async () => {
 	
