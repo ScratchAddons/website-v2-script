@@ -1,5 +1,3 @@
-// TO BE DEPRECATED ON TX-GO MIGRATION IF POSSIBLE
-
 const fs = require("fs-extra")
 const globby = require("globby")
 const path = require("path")
@@ -56,8 +54,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 			if (fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8").trim() === fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8").trim()) {
 				console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
 				fs.removeSync(i18nLanguageDirPath + filePath)
-			} else {
-				// console.log(i18nLanguageDirPath + filePath + " is different")
+			// } else {
+			// 	console.log(i18nLanguageDirPath + filePath + " is different")
 			}
 	
 			// if (scmp(fs.readFileSync(eni18nLanguageDirPath + filePath), fs.readFileSync(i18nLanguageDirPath + filePath))) {
