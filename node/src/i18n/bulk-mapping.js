@@ -1,16 +1,19 @@
 const fs = require('fs-extra')
 const globby = require('globby')
+const ini = require('ini')
 
 module.exports = (i18nPath, orgSlug, projId) => {
-	let txConfig = fs.readFileSync(`${i18nPath}.tx/config`, "utf-8")
+	let txConfigIni = ini.parse(fs.readFileSync(`${i18nPath}.tx/config`, "utf-8"))
+	
+	const resourceFileInConfig = Object.entries(txConfigIni).filter(item => item[1].type && (item[1].type === 'HTML_FRAGMENT' || item[1].type === 'GITHUBMARKDOWN')).map(item => item[1].source_file)
+	const resourceFilesInLocal = globby.sync([`${i18nPath}en/html-content/**`, `${i18nPath}en/markdown/**`]).map(path => path.replace(i18nPath, ''))
 
-	const resourceFiles = globby.sync([`${i18nPath}en/html-content/**`, `${i18nPath}en/markdown/**`]).map(path => path.replace(i18nPath, ''))
+	console.log(resourceFilesInLocal)
 
-	console.log(resourceFiles)
-
-	resourceFiles.forEach(path => {
-		if (txConfig.search(path) + 1) console.log("Found: " + path)
-		else {
+	resourceFilesInLocal.forEach(path => {
+		if (resourceFileInConfig.indexOf(path) + 1) {
+			// console.log("Found: " + path)
+		} else {
 			console.log("Missing: " + path)
 			const resourceId = path.split('.').slice(0, -1).join('.').replace('en/', '').replace(/[^a-z0-9-_]/g, '_')
 			let resourceType
@@ -20,19 +23,25 @@ module.exports = (i18nPath, orgSlug, projId) => {
 				resourceType = 'GITHUBMARKDOWN'
 			}
 			console.log(resourceId)
-			txConfig += [
-				'',
-				`[o:${orgSlug}:p:${projId}:r:${resourceId}]`,
-				`file_filter = ${path.replace('en/', '<lang>/')}`,
-				'minimum_perc = 100',
-				`source_file = ${path}`,
-				'source_lang = en',
-				`type = ${resourceType}`,
-				''
-			].join('\n')
+			txConfigIni[`o:${orgSlug}:p:${projId}:r:${resourceId}`] = {
+				file_filter: path.replace('en/', '<lang>/'),
+				minimum_perc: 100,
+				source_file: path,
+				source_lang: 'en',
+				type: resourceType
+			}
 		}
 	})
 
-	fs.outputFileSync(`${i18nPath}.tx/config`, txConfig)
+	resourceFileInConfig.forEach(path => {
+		if (resourceFilesInLocal.indexOf(path) + 1) {
+			// console.log("Found: " + path)
+		} else {
+			console.log("Missing: " + path)
+			delete txConfigIni[Object.entries(txConfigIni).filter(item => item[1].source_file === path)[0][0]]
+		}
+	})
+
+	fs.outputFileSync(`${i18nPath}.tx/config`, ini.stringify(txConfigIni).replace(/=/g, ' = '))
 
 }
