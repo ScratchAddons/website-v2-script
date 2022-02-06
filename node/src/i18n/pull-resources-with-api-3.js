@@ -1,3 +1,5 @@
+// TO BE DEPRECATED ON TX-GO MIGRATION
+
 const fs = require("fs-extra")
 const axios = require("axios").default
 const simpleGit = require("simple-git").default

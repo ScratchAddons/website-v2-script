@@ -13,6 +13,7 @@ module.exports = {
 	excludedFrontMatterFields: ["aliases"],
 	cleanUpGlobPatterns: ["**", "!addons-data.json"],
 	txOrgSlug: "scratch-addons",
+	txProjectSlug: "scratch-addons-website",
 	txToken: process.env.TX_TOKEN,
-	resourcesToPullWithAPI3: ["type:GITHUBMARKDOWN"]
+	// resourcesToPullWithAPI3: ["type:GITHUBMARKDOWN"]
 }

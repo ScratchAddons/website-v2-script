@@ -8,10 +8,8 @@ module.exports = (i18nPath) => {
 
 	const resources = {}
 
-	Object.keys(txConfig).filter(el => el !== "main").forEach(projectSlug => {
-		Object.keys(txConfig[projectSlug]).forEach(resourceSlug => {
-			resources[projectSlug + "." + resourceSlug] = txConfig[projectSlug][resourceSlug]
-		})
+	Object.keys(txConfig).filter(el => el !== "main").forEach(resourceSlug => {
+		resources[resourceSlug] = txConfig[resourceSlug]
 	})
 
 	return resources

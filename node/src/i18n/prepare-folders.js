@@ -1,3 +1,5 @@
+// TO BE DEPRECATED ON TX-GO MIGRATION
+
 const fs = require("fs-extra")
 const globby = require("globby")
 const path = require("path")
