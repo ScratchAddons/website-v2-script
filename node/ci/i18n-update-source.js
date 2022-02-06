@@ -27,7 +27,7 @@ require("../src/i18n/compile-en-to-i18n.js")(
 	}
 )
 
-require("../src/i18n/bulk-mapping")(".", txOrgSlug, txProjectSlug)
+require("../src/i18n/bulk-mapping")("./", txOrgSlug, txProjectSlug)
 
 ;(async () => {
 	
