@@ -4,7 +4,6 @@ const path = require("path")
 const chalk = require("chalk")
 const yaml = require("yaml")
 const { removeSimilarEntries } = require("../recursive-object-functions")
-// const scmp = require("scmp")
 
 module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
@@ -58,12 +57,6 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 			// 	console.log(i18nLanguageDirPath + filePath + " is different")
 			}
 	
-			// if (scmp(fs.readFileSync(eni18nLanguageDirPath + filePath), fs.readFileSync(i18nLanguageDirPath + filePath))) {
-			// 	console.log(filePath + " is similar")
-			// } else {
-			// 	console.log(filePath + " is different")
-			// }
-
 		}
 
 	})
