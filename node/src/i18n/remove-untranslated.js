@@ -3,6 +3,7 @@ const globby = require("globby")
 const path = require("path")
 const chalk = require("chalk")
 const yaml = require("yaml")
+const stringSimilarity = require("string-similarity")
 const { removeSimilarEntries } = require("../recursive-object-functions")
 
 module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
@@ -50,7 +51,10 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 		} else {
 
-			if (fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8").trim() === fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8").trim()) {
+			if (
+				fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8").trim() === fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8").trim() ||
+				stringSimilarity.compareTwoStrings(fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8").trim(), fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8").trim()) === 1
+			) {
 				console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
 				fs.removeSync(i18nLanguageDirPath + filePath)
 			// } else {

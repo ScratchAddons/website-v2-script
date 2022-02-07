@@ -28,6 +28,7 @@
     "opencc-js": "^1.0.3",
     "prettier": "^2.3.0",
     "simple-git": "^2.39.0",
+    "string-similarity": "^4.0.4",
     "yaml": "^2.0.0-6"
   }
 }
