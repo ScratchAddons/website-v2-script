@@ -14,11 +14,20 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 	let globPatterns = options.globPatterns || ["**"]
 
-	const files = globby.sync(globPatterns.map(pattern => eni18nLanguageDirPath + pattern))
+	const filesEn = globby.sync(globPatterns.map(pattern => eni18nLanguageDirPath + pattern))
+	const filesLang = globby.sync(globPatterns.map(pattern => i18nLanguageDirPath + pattern))
 
-	files.forEach(file => {
+	const filesRelEn = filesEn.map(path => path.slice(eni18nLanguageDirPath.length))
+	const filesRelLang = filesLang.map(path => path.slice(i18nLanguageDirPath.length))
 
-		let filePath = file.replace(eni18nLanguageDirPath, "")
+	filesRelLang.forEach(filePath => {
+		if (!filesRelEn.includes(filePath)) {
+			console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is not found on English. Removing...`)
+			fs.removeSync(i18nLanguageDirPath + filePath)
+		}
+	})
+
+	filesRelEn.forEach(filePath => {
 
 		if (!fs.existsSync(i18nLanguageDirPath + filePath)) return
 
