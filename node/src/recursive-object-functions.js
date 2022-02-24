@@ -6,7 +6,7 @@ const removeSimilarEntries = (objectTarget, objectReference) => {
 			objectTarget[keys] = removeSimilarEntries(objectTarget[keys], objectReference[keys])
 			if (Object.keys(objectTarget[keys]).length === 0) delete objectTarget[keys]
 		}
-		else if (objectTarget[keys] === objectReference[keys]) delete objectTarget[keys]
+		else if (objectTarget[keys] === objectReference[keys] || objectTarget[keys] === "") delete objectTarget[keys]
 	})
 	return objectTarget
 
