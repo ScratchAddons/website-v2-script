@@ -18,7 +18,7 @@ const globby = require("globby")
 	// require("../src/i18n/generate-chinese-variants")("zh_TW/", "zh_HK/")
 
 	await require("../src/git-commit-all-and-push.js")(
-		`Update localization files with force (${new Date().toISOString()})`,
+		`Force pdate localization files (${new Date().toISOString()})`,
 		gitEmail,
 		gitName
 	)
