@@ -7,7 +7,7 @@ module.exports = {
 		"docs/**",
 		"!docs/policies/**",   // Decided not to translate
 		"!docs/reference/**",  // Hold it for later
-		"blog/**"              // Decided not to translate (ScratchAddons/website-v2#159)
+		"!blog/**"              // Decided not to translate (ScratchAddons/website-v2#159)
 ],
 	translatableFrontMatterFields: ["title", "description"],
 	excludedFrontMatterFields: ["aliases"],
