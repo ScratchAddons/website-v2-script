@@ -85,6 +85,9 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 					.replace(/=(["'])(.+?)\{\{(.+?)\}\}/g, (match, p0, p1, p2, offset, string) => {
 						return `=${p0}${p1}HESTART${encodeURI(p2)}HEEND`
 					})
+					.replace(/<script type="text\/javascript\+hugowrapper">HESTART(.+)HEEND<\/script>/g, (match, p1, offset, string) => {
+						return '<script type="text/javascript+hugowrapper">{{' + decodeURI(p1) +'}}</script>'
+					})
 				if (frontMatter && frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
 				else fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
