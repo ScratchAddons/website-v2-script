@@ -47,8 +47,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 						.replace(/https:\/\/scratchaddons\.com#(.+?)_hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"$1\" >}}")
 						 // HOTFIX: Remove after all instance of &lt;a and tx_gtsymbol gone on i18n repo
 						.replace(/tx_gtsymbol/g, ">").replace(/&lt;a/g, "<a")
-						.replace(/=(["'])(.+)HESTART(.+)HEEND/g, (match, p0, p1, p2, offset, string) => {
-							return `=${p0}${p1}\{\{${decodeURI(p2)}\}\}`
+						.replace(/HESTART(.+?)HEEND/g, (match, p2, offset, string) => {
+							return `\{\{${decodeURI(p2)}\}\}`
 						})
 						.split(/\r?\n/)
 				]
