@@ -158,11 +158,11 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	})()
 
 	;(() => {
-		if (!fs.existsSync(hugoRepoPath + "data/credits/contributortypes/description/en.yaml")) return
+		if (!fs.existsSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml")) return
 
 		console.log(chalk`Copying contributor types file...`)
 
-		fs.copyFileSync(hugoRepoPath + "data/credits/contributortypes/description/en.yaml", i18nRepoPath + "contributor-types.yml")
+		fs.copyFileSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml", i18nRepoPath + "contributor-types.yml")
 	})()
 
 	console.log("Compiling done!")
