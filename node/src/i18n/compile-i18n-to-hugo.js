@@ -97,7 +97,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	;(() => {
 		console.log(chalk`Copying Hugo i18n strings file...`)
 
-		fs.ensureDirSync(`${hugoRepoPath}i18n/`)
+		// fs.ensureDirSync(`${hugoRepoPath}i18n/`)
 		fs.copyFileSync(i18nLanguageDirPath + "hugo-i18n.yml", hugoRepoPath + `i18n/${languageCodeHugo}.yaml`)
 	})()
 
@@ -105,8 +105,16 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		if (!fs.existsSync(i18nLanguageDirPath + "addons-data.json")) return
 		console.log(chalk`Copying addons data...`)
 
-		fs.ensureDirSync(`${hugoRepoPath}data/addons/`)
+		// fs.ensureDirSync(`${hugoRepoPath}data/addons/`)
 		fs.copyFileSync(i18nLanguageDirPath + "addons-data.json", hugoRepoPath + `data/addons/${languageCodeHugo}.json`)
+	})()
+
+	;(() => {
+		if (!fs.existsSync(i18nLanguageDirPath + "contributor-types.yml")) return
+		console.log(chalk`Copying contributor types file...`)
+
+		// fs.ensureDirSync(hugoRepoPath + 'data/credits/contributortypes/description/')
+		fs.copyFileSync(i18nLanguageDirPath + "contributor-types.yml", hugoRepoPath + `data/credits/contributortypes/description/${languageCodeHugo}.yml`)
 	})()
 
 	console.log("Compiling done!")
