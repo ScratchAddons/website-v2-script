@@ -26,11 +26,25 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	;(() => {
 		const inputContentPath = [i18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html"))
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html").split(i18nLanguageDirPath)[0])
 
-		files.forEach(file => {
-			let filePath = file.split("html-content/")[1]
-			console.log(chalk`Compiling {inverse ${filePath}}...`)
+		const enInputContentPath = [eni18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
+		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html").split(eni18nLanguageDirPath)[0])
+
+		enFiles.forEach(file => {
+
+			let filePath = enFile.split("html-content/")[1]
+			let useEn = false
+
+			if (!files.includes(enFile)) {
+				file = eni18nLanguageDirPath + enFile
+				useEn = true
+			} else file = i18nLanguageDirPath + enFile
+
+			filePath = file.split("html-content/")[1]
+
+			if (useEn) console.log(chalk`Compiling {inverse ${filePath}} (using English)...`)
+			else console.log(chalk`Compiling {inverse ${filePath}}...`)
 
 			let output
 
@@ -65,11 +79,24 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	;(() => {	
 		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/", i18nLanguageDirPath + "static-markdown/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md"))
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md").split(i18nLanguageDirPath)[0])
 
-		files.forEach(file => {
-			let filePath = file.split("markdown/")[1]
-			console.log(chalk`Compiling {inverse ${filePath}}...`)
+		const enInputMarkdownPath = [eni18nLanguageDirPath + "markdown/", eni18nLanguageDirPath + "static-markdown/"]
+		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md").split(eni18nLanguageDirPath)[0])
+
+		enFiles.forEach(enFile => {
+			let filePath = enFile.split("markdown/")[1]
+			let useEn = false
+
+			if (!files.includes(enFile)) {
+				file = eni18nLanguageDirPath + enFile
+				useEn = true
+			} else file = i18nLanguageDirPath + enFile
+
+			filePath = file.split("markdown/")[1]
+
+			if (useEn) console.log(chalk`Compiling {inverse ${filePath}} (using English)...`)
+			else console.log(chalk`Compiling {inverse ${filePath}}...`)
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
 
