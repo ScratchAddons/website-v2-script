@@ -35,6 +35,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 			let filePath = enFile.split("html-content/")[1]
 			let useEn = false
+			let file
 
 			if (!files.includes(enFile)) {
 				file = eni18nLanguageDirPath + enFile
@@ -87,6 +88,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		enFiles.forEach(enFile => {
 			let filePath = enFile.split("markdown/")[1]
 			let useEn = false
+			let file
 
 			if (!files.includes(enFile)) {
 				file = eni18nLanguageDirPath + enFile
