@@ -31,7 +31,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		const enInputContentPath = [eni18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
 		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.split(eni18nLanguageDirPath)[0])
 
-		enFiles.forEach(file => {
+		enFiles.forEach(enFile => {
 
 			let filePath = enFile.split("html-content/")[1]
 			let useEn = false
