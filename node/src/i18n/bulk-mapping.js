@@ -25,7 +25,7 @@ module.exports = (i18nPath, orgSlug, projId) => {
 			console.log(resourceId)
 			txConfigIni[`o:${orgSlug}:p:${projId}:r:${resourceId}`] = {
 				file_filter: path.replace('en/', '<lang>/'),
-				minimum_perc: 100,
+				minimum_perc: 0,
 				source_file: path,
 				source_lang: 'en',
 				type: resourceType
