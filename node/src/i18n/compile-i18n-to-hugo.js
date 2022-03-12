@@ -24,12 +24,21 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	htmlFrontYaml = addMissingEntries(htmlFrontYaml, enHtmlFrontYaml)
 
+	const inputTestPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "markdown/"]
+	const filesTest = globby.sync(contentGlobPatterns.map(pattern => inputTestPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md") || path.endsWith(".html")).length
+
+	if (!filesTest) {
+		console.log('No HTML and Markdown files that are translated. Skipping these!')
+	}
+
 	;(() => {
-		const inputContentPath = [i18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.split(i18nLanguageDirPath)[0])
+		if (!filesTest) return
+
+		const inputContentPath = [i18nLanguageDirPath + "html-content/"]
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
 
 		const enInputContentPath = [eni18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
-		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.split(eni18nLanguageDirPath)[0])
+		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
 		console.log(inputContentPath, files, enInputContentPath, enFiles)
 
@@ -80,12 +89,14 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		})
 	})()
 
-	;(() => {	
-		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/", i18nLanguageDirPath + "static-markdown/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.split(i18nLanguageDirPath)[0])
+	;(() => {
+		if (!filesTest) return
+
+		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/"]
+		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))
 
 		const enInputMarkdownPath = [eni18nLanguageDirPath + "markdown/", eni18nLanguageDirPath + "static-markdown/"]
-		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.split(eni18nLanguageDirPath)[0])
+		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
 		enFiles.forEach(enFile => {
 			let filePath = enFile.split("markdown/")[1]
@@ -131,7 +142,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	;(() => {
 		console.log(chalk`Copying Hugo i18n strings file...`)
 
-		// fs.ensureDirSync(`${hugoRepoPath}i18n/`)
+		fs.ensureDirSync(`${hugoRepoPath}i18n/`)
 		fs.copyFileSync(i18nLanguageDirPath + "hugo-i18n.yml", hugoRepoPath + `i18n/${languageCodeHugo}.yaml`)
 	})()
 
@@ -139,7 +150,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		if (!fs.existsSync(i18nLanguageDirPath + "addons-data.json")) return
 		console.log(chalk`Copying addons data...`)
 
-		// fs.ensureDirSync(`${hugoRepoPath}data/addons/`)
+		fs.ensureDirSync(`${hugoRepoPath}data/addons/`)
 		fs.copyFileSync(i18nLanguageDirPath + "addons-data.json", hugoRepoPath + `data/addons/${languageCodeHugo}.json`)
 	})()
 
@@ -147,7 +158,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		if (!fs.existsSync(i18nLanguageDirPath + "contributor-types.yml")) return
 		console.log(chalk`Copying contributor types file...`)
 
-		// fs.ensureDirSync(hugoRepoPath + 'data/credits/contributortypes/description/')
+		fs.ensureDirSync(hugoRepoPath + 'data/credits/contributortypes/description/')
 		fs.copyFileSync(i18nLanguageDirPath + "contributor-types.yml", hugoRepoPath + `data/credits/contributortypes/description/${languageCodeHugo}.yml`)
 	})()
 
