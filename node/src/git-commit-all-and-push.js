@@ -10,7 +10,7 @@ module.exports = async (commitMessage, gitEmail, gitName) => {
 		return
 	}
 
-	console.log("::set-output name=do_invoke::1")
+	console.log("::set-output name=do_invoke::true")
 	
 	console.log("Commiting all files...")
 	console.log(`user: ${gitName} <${gitEmail}>`)
