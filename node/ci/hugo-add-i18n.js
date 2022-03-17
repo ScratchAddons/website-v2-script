@@ -22,3 +22,11 @@ globby.sync(["../i18n/*", "!../i18n/en"], {
 	)
 
 })
+
+;(async () => {
+	
+	await require("../src/i18n/get-translated-giscus")(
+		"data/giscuslangs.json"
+	)
+	
+})

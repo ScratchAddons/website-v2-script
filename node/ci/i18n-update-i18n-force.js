@@ -1,18 +1,18 @@
 const { gitEmail, gitName } = require("./consts.js")
 const globby = require("globby")
 
+globby.sync(["*", "!en"], {
+	onlyDirectories: true
+}).forEach(langPath => {
+
+	require("../src/i18n/remove-untranslated.js")(
+		langPath + "/",
+		"en/"
+	)
+
+})
+
 ;(async () => {
-
-	globby.sync(["*", "!en"], {
-		onlyDirectories: true
-	}).forEach(langPath => {
-
-		require("../src/i18n/remove-untranslated.js")(
-			langPath + "/",
-			"en/"
-		)
-
-	})
 
 	// require("../src/i18n/generate-chinese-variants")("zh_TW/", "zh_CN/")
 	// require("../src/i18n/generate-chinese-variants")("zh_TW/", "zh_HK/")
