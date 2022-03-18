@@ -22,6 +22,11 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	let htmlFrontYaml = fs.existsSync(i18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
 	let staticFrontYaml = fs.existsSync(eni18nLanguageDirPath + "static-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"})) : {}
 
+	staticFrontYaml = staticFrontYaml.map(page => {
+		if (page.aliases) page.aliases = page.aliases.map(alias => "/" + languageCodeHugo + alias)
+		return page
+	})
+
 	htmlFrontYaml = addMissingEntries(htmlFrontYaml, enHtmlFrontYaml)
 
 	const inputTestPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "markdown/"]
@@ -31,8 +36,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		console.log('No HTML and Markdown files that are translated. Skipping these!')
 	}
 
-	;(() => {
-		if (!filesTest) return
+	if (filesTest) (() => {
 
 		const inputContentPath = [i18nLanguageDirPath + "html-content/"]
 		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
@@ -89,8 +93,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 		})
 	})()
 
-	;(() => {
-		if (!filesTest) return
+	if (filesTest) (() => {
 
 		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/"]
 		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))

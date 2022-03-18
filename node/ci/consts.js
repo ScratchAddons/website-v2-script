@@ -10,7 +10,7 @@ module.exports = {
 		"!blog/**"              // Decided not to translate (ScratchAddons/website-v2#159)
 ],
 	translatableFrontMatterFields: ["title", "description"],
-	excludedFrontMatterFields: ["aliases"],
+	excludedFrontMatterFields: [],
 	cleanUpGlobPatterns: ["**", "!addons-data.json"],
 	txOrgSlug: "scratch-addons",
 	txProjectSlug: "scratch-addons-website",
