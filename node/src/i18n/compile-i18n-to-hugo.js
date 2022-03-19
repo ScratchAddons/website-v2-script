@@ -22,10 +22,9 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	let htmlFrontYaml = fs.existsSync(i18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
 	let staticFrontYaml = fs.existsSync(eni18nLanguageDirPath + "static-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "static-front.yml", {encoding: "utf-8"})) : {}
 
-	staticFrontYaml = staticFrontYaml.map(page => {
-		if (page.aliases) page.aliases = page.aliases.map(alias => "/" + languageCodeHugo + alias)
-		return page
-	})
+	for (const page in staticFrontYaml) {
+		if (staticFrontYaml[page].aliases) staticFrontYaml[page].aliases = staticFrontYaml[page].aliases.map(alias => "/" + languageCodeHugo + alias)
+	}
 
 	htmlFrontYaml = addMissingEntries(htmlFrontYaml, enHtmlFrontYaml)
 
