@@ -9,13 +9,14 @@ import {
 	gitName
 } from "./consts.js"
 import fs from "fs-extra"
-import gitCommitAllAndPush from "../src/git-commit-all-and-push.js"
-import bulkMapping from "../src/i18n/bulk-mapping.js"
+import removeGlob from "../src/remove-glob"
 import compileEnToI18n from "../src/i18n/compile-en-to-i18n.js"
+import bulkMapping from "../src/i18n/bulk-mapping.js"
+import gitCommitAllAndPush from "../src/git-commit-all-and-push.js"
 
 if (fs.existsSync("en/")) {
 	console.log("Cleaning up...")
-	require("../src/remove-glob")(
+	removeGlob(
 		"en/",
 		cleanUpGlobPatterns
 	)
