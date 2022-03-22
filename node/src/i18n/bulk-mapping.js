@@ -1,8 +1,8 @@
-const fs = require('fs-extra')
-const globby = require('globby')
-const ini = require('ini')
+import fs from "fs-extra"
+import globby from "globby"
+import ini from "ini"
 
-module.exports = (i18nPath, orgSlug, projId) => {
+export default (i18nPath, orgSlug, projId) => {
 	let txConfigIni = ini.parse(fs.readFileSync(`${i18nPath}.tx/config`, "utf-8"))
 	
 	const resourceFileInConfig = Object.entries(txConfigIni).filter(item => item[1].type && (item[1].type === 'HTML_FRAGMENT' || item[1].type === 'GITHUBMARKDOWN')).map(item => item[1].source_file)

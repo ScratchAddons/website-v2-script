@@ -1,8 +1,8 @@
-const fs = require("fs-extra")
-const prettier = require("prettier")
-const chalk = require("chalk")
+import fs from "fs-extra"
+import prettier from "prettier"
+import chalk from "chalk"
 
-module.exports = (inputPath, outputPath) => {
+export default (inputPath, outputPath) => {
 
 	const dataset = []
 	

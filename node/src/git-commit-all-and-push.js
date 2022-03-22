@@ -1,8 +1,8 @@
-const simpleGit = require("simple-git").default
+import simpleGit from "simple-git"
 
 const git = simpleGit("./")
 
-module.exports = async (commitMessage, gitEmail, gitName) => {
+export default async (commitMessage, gitEmail, gitName) => {
 
 	if ((await git.status()).files.length === 0) {
 		console.log("No files changed. Skipping.")

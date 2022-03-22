@@ -1,11 +1,11 @@
-const fs = require("fs-extra")
-const globby = require("globby")
-const path = require("path")
-const chalk = require("chalk")
-const yaml = require("yaml")
-const { addMissingEntries } = require("../recursive-object-functions")
+import fs from "fs-extra"
+import globby from "globby"
+import path from "path"
+import chalk from "chalk"
+import yaml from "yaml"
+import { addMissingEntries } from "../recursive-object-functions"
 
-module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
+export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]

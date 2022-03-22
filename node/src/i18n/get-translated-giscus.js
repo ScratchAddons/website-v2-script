@@ -1,8 +1,8 @@
-const fs = require("fs-extra")
-const chalk = require("chalk")
-const axios = require("axios").default
+import fs from "fs-extra"
+import chalk from "chalk"
+import axios from "axios"
 
-module.exports = async (jsonPath, options = {}) => {
+export default async (jsonPath, options = {}) => {
 
 	const giscusi18n = await axios.get('https://raw.githubusercontent.com/giscus/giscus/main/i18n.json').then(response => response.data)
 

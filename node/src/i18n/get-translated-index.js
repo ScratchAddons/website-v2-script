@@ -1,9 +1,9 @@
-const fs = require("fs-extra")
-const yaml = require("yaml")
-const path = require("path")
-const chalk = require("chalk")
+import fs from "fs-extra"
+import yaml from "yaml"
+import path from "path"
+import chalk from "chalk"
 
-module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
+export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 	const translatedIndex = fs.existsSync(ymlPath) ? yaml.parse(fs.readFileSync(ymlPath, "utf-8")) : ["en"]

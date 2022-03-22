@@ -1,8 +1,8 @@
-const fs = require("fs-extra")
-const globby = require("globby")
-const yaml = require("yaml")
-const chalk = require("chalk")
-const htmlMinifier = require("html-minifier")
+import fs from "fs-extra"
+import globby from "globby"
+import yaml from "yaml"
+import chalk from "chalk"
+import htmlMinifier from "html-minifier"
 
 const minifierOptions = {
 	collapseWhitespace: true,
@@ -22,7 +22,7 @@ const minifierOptions = {
 
 const allIndex = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 
-module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
+export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
 	let translatableFrontMatterFields = options.translatableFrontMatterFields || []

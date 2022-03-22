@@ -1,7 +1,7 @@
-const fs = require("fs-extra")
-const yaml = require("yaml")
-const path = require("path")
-const chalk = require("chalk")
+import fs from "fs-extra"
+import yaml from "yaml"
+import path from "path"
+import chalk from "chalk"
 
 const getLanguageDisplayName = languageCode => {
 	try {
@@ -17,7 +17,7 @@ const getLanguageDisplayName = languageCode => {
 	}
 }
 
-module.exports = (i18nLanguageDirPath, configPath, options = {}) => {
+export default (i18nLanguageDirPath, configPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 

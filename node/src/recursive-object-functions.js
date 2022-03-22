@@ -30,7 +30,7 @@ const addMissingEntries = (objectTarget, objectReference) => {
 
 }
 
-module.exports = {
+export default {
 	removeSimilarEntries,
 	addMissingEntries
 }

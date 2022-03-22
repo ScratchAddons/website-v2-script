@@ -1,12 +1,12 @@
-const fs = require("fs-extra")
-const globby = require("globby")
-const path = require("path")
-const chalk = require("chalk")
-const yaml = require("yaml")
-const stringSimilarity = require("string-similarity")
-const { removeSimilarEntries } = require("../recursive-object-functions")
+import fs from "fs-extra"
+import globby from "globby"
+import path from "path"
+import chalk from "chalk"
+import yaml from "yaml"
+import stringSimilarity from "string-similarity"
+import { removeSimilarEntries } from "../recursive-object-functions"
 
-module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
+export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 	let languageCode = options.languageCode || path.basename(i18nLanguageDirPath)
 

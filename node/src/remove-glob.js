@@ -1,10 +1,11 @@
-const globby = require("globby")
-const chalk = require("chalk")
-const fs = require("fs-extra")
+import globby from "globby"
+import chalk from "chalk"
+import fs from "fs-extra"
 
-module.exports = (folderPath, globPatterns) => {
+export default (folderPath, globPatterns) => {
 	const filesToRemove = globby.sync(globPatterns.map(pattern => {
-		if (pattern.startsWith("!")) return "!" + folderPath + pattern.slice("1")
+		if (pattern.startsWith("!"))
+			return "!" + folderPath + pattern.slice("1")
 		return folderPath + pattern
 	}))
 	console.log(filesToRemove)

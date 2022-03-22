@@ -1,21 +1,25 @@
-const globby = require("globby")
+import globby from "globby"
+import addLanguagesOnConfig from "../src/i18n/add-languages-on-config"
+import compileI18nToHugo from "../src/i18n/compile-i18n-to-hugo"
+import getTranslatedGiscus from "../src/i18n/get-translated-giscus"
+import getTranslatedIndex from "../src/i18n/get-translated-index"
 
 globby.sync(["../i18n/*", "!../i18n/en"], {
 	onlyDirectories: true
 }).forEach(langPath => {
 
-	require("../src/i18n/compile-i18n-to-hugo")(
+	compileI18nToHugo(
 		langPath + "/",
 		"../i18n/en/",
 		"./",
 	)
 
-	require("../src/i18n/add-languages-on-config")(
+	addLanguagesOnConfig(
 		langPath + "/",
 		"config.yml"
 	)
 
-	require("../src/i18n/get-translated-index")(
+	getTranslatedIndex(
 		langPath + "/",
 		"../i18n/en/",
 		"data/translatedindex.yml"
@@ -23,10 +27,6 @@ globby.sync(["../i18n/*", "!../i18n/en"], {
 
 })
 
-;(async () => {
-	
-	await require("../src/i18n/get-translated-giscus")(
-		"data/giscuslangs.json"
-	)
-
-})()
+await getTranslatedGiscus(
+	"data/giscuslangs.json"
+)
