@@ -4,9 +4,9 @@ export const contentGlobPatterns = [
 	"*",
 	"!contributors.html",
 	"docs/**",
-	"!docs/policies/**",
-	"!docs/reference/**",
-	"!blog/**" // Decided not to translate (ScratchAddons/website-v2#159)
+	"!docs/policies/**",    // Decided not to translate
+	"!docs/reference/**",   // Hold it for later
+	"!blog/**"              // Decided not to translate (ScratchAddons/website-v2#159)
 ];
 export const translatableFrontMatterFields = ["title", "description"];
 export const excludedFrontMatterFields = [];
