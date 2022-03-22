@@ -1,7 +1,7 @@
-const fs = require("fs-extra")
-const yaml = require("yaml")
-const path = require("path")
-const chalk = require("chalk")
+import fs from "fs-extra"
+import yaml from "yaml"
+import path from "path"
+import chalkT from 'chalk-template';
 
 const getLanguageDisplayName = languageCode => {
 	try {
@@ -17,16 +17,16 @@ const getLanguageDisplayName = languageCode => {
 	}
 }
 
-module.exports = (i18nLanguageDirPath, configPath, options = {}) => {
+export default (i18nLanguageDirPath, configPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 
 	if (!languageCode) {
 		languageCode = path.basename(i18nLanguageDirPath)
 	}
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
-	console.log(chalk`Adding {inverse ${languageCodeHugo}} to the site config...`)
+	console.log(chalkT`Adding {inverse ${languageCodeHugo}} to the site config...`)
 
 	const languageName = getLanguageDisplayName(languageCodeHugo)
 

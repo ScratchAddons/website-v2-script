@@ -1,8 +1,8 @@
-const fs = require("fs-extra")
-const globby = require("globby")
-const yaml = require("yaml")
-const chalk = require("chalk")
-const htmlMinifier = require("html-minifier")
+import fs from "fs-extra"
+import { globbySync } from "globby"
+import yaml from "yaml"
+import chalkT from 'chalk-template';
+import htmlMinifier from "html-minifier"
 
 const minifierOptions = {
 	collapseWhitespace: true,
@@ -22,7 +22,7 @@ const minifierOptions = {
 
 const allIndex = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 
-module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
+export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
 	let translatableFrontMatterFields = options.translatableFrontMatterFields || []
@@ -35,7 +35,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	console.log("Compiling en from Hugo format into i18n repo format...")
 
 	console.log(contentGlobPatterns.map(pattern => hugoRepoPath + "content/" + pattern))
-	let contentFiles = globby.sync(contentGlobPatterns.map(pattern => {
+	let contentFiles = globbySync(contentGlobPatterns.map(pattern => {
 		if (pattern.startsWith("!")) return "!" + hugoRepoPath + "content/" + pattern.slice("1")
 		return hugoRepoPath + "content/" + pattern
 	}))
@@ -59,7 +59,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
 	
 				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(chalkT`Compiling {inverse ${filePath}}...`)
 	
 				if (frontMatter) {
 
@@ -93,7 +93,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			} else {
 
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(chalkT`Compiling {inverse ${filePath}}...`)
 				staticFrontYaml[filePath] = false
 				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
 				fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
@@ -122,7 +122,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
 	
 				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(chalkT`Compiling {inverse ${filePath}}...`)
 	
 				const frontMatterToTranslate = {}
 				const frontMatterToKeep = {}
@@ -146,7 +146,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			} else {
 
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(chalkT`Compiling {inverse ${filePath}}...`)
 				staticFrontYaml[filePath] = false
 				fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
 			}
@@ -158,7 +158,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	})()
 
 	;(() => {
-		console.log(chalk`Copying Hugo i18n strings file...`)
+		console.log(chalkT`Copying Hugo i18n strings file...`)
 
 		fs.copyFileSync(hugoRepoPath + "i18n/en.yaml", i18nRepoPath + "hugo-i18n.yml")
 	})()
@@ -166,7 +166,7 @@ module.exports = (hugoRepoPath, i18nRepoPath, options = {}) => {
 	;(() => {
 		if (!fs.existsSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml")) return
 
-		console.log(chalk`Copying contributor types file...`)
+		console.log(chalkT`Copying contributor types file...`)
 
 		fs.copyFileSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml", i18nRepoPath + "contributor-types.yml")
 	})()

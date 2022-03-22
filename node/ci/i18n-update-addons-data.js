@@ -1,27 +1,31 @@
-const { gitEmail, gitName } = require("./consts.js")
-const globby = require("globby")
-const path = require("path")
+import { gitEmail, gitName } from "./consts.js"
+import { globbySync } from "globby"
+import path from "path"
+import compileEn from "../src/addons-data/compile-en.js";
+import compileOther from "../src/addons-data/compile-other.js"
+import removeUntranslated from "../src/i18n/remove-untranslated.js"
+import gitCommitAllAndPush from "../src/git-commit-all-and-push.js";
 
-require("../src/addons-data/compile-en")(
+compileEn(
 	"../sa/", 
 	"en/addons-data.json"
 )
 
-globby.sync(["./*", "!./en"], {
+globbySync(["./*", "!./en"], {
 	onlyDirectories: true
 }).forEach(langPath => {
 
 	const languageCode = path.basename(langPath)
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
-	require("../src/addons-data/compile-other")(
+	compileOther(
 		"../sa/", 
 		`${languageCode}/addons-data.json`, {
 			languageCode: languageCodeHugo
 		}
 	)
 
-	require("../src/i18n/remove-untranslated.js")(
+	removeUntranslated(
 		langPath + "/",
 		"en/",
 		{
@@ -31,12 +35,8 @@ globby.sync(["./*", "!./en"], {
 	
 })
 
-;(async () => {
-
-	await require("../src/git-commit-all-and-push.js")(
-		`Update addons data (${new Date().toISOString()})`,
-		gitEmail,
-		gitName
-	)
-
-})()
+await gitCommitAllAndPush(
+	`Update addons data (${new Date().toISOString()})`,
+	gitEmail,
+	gitName
+)

@@ -1,9 +1,9 @@
-const fs = require("fs-extra")
-const yaml = require("yaml")
-const path = require("path")
-const chalk = require("chalk")
+import fs from "fs-extra"
+import yaml from "yaml"
+import path from "path"
+import chalkT from 'chalk-template';
 
-module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
+export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 	const translatedIndex = fs.existsSync(ymlPath) ? yaml.parse(fs.readFileSync(ymlPath, "utf-8")) : ["en"]
@@ -11,13 +11,13 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options =
 	if (!languageCode) {
 		languageCode = path.basename(i18nLanguageDirPath)
 	}
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
 	const i18nStrings = yaml.parse(fs.readFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "utf-8"))
 
 	if (!i18nStrings) return
 
-	console.log(chalk`Adding {inverse ${languageCodeHugo}} to the list of translated index page...`)
+	console.log(chalkT`Adding {inverse ${languageCodeHugo}} to the list of translated index page...`)
 	translatedIndex.push(languageCodeHugo)
 	fs.outputFileSync(ymlPath, yaml.stringify(translatedIndex, { lineWidth: 0 }))
 

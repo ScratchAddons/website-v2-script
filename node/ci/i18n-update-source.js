@@ -1,4 +1,4 @@
-const { 
+import { 
 	contentGlobPatterns, 
 	translatableFrontMatterFields, 
 	excludedFrontMatterFields,
@@ -7,12 +7,16 @@ const {
 	txProjectSlug,
 	gitEmail,
 	gitName
-} = require("./consts.js")
-const fs = require("fs-extra")
+} from "./consts.js"
+import fs from "fs-extra"
+import removeGlob from "../src/remove-glob.js"
+import compileEnToI18n from "../src/i18n/compile-en-to-i18n.js"
+import bulkMapping from "../src/i18n/bulk-mapping.js"
+import gitCommitAllAndPush from "../src/git-commit-all-and-push.js"
 
 if (fs.existsSync("en/")) {
 	console.log("Cleaning up...")
-	require("../src/remove-glob")(
+	removeGlob(
 		"en/",
 		cleanUpGlobPatterns
 	)
@@ -20,7 +24,7 @@ if (fs.existsSync("en/")) {
 }
 fs.ensureDirSync("en/")
 
-require("../src/i18n/compile-en-to-i18n.js")(
+compileEnToI18n(
 	"../website/", 
 	"en/", { 
 		contentGlobPatterns,
@@ -29,14 +33,10 @@ require("../src/i18n/compile-en-to-i18n.js")(
 	}
 )
 
-require("../src/i18n/bulk-mapping")("./", txOrgSlug, txProjectSlug)
+bulkMapping("./", txOrgSlug, txProjectSlug)
 
-;(async () => {
-	
-	await require("../src/git-commit-all-and-push.js")(
-		`Update source files (${new Date().toISOString()})`,
-		gitEmail,
-		gitName
-	)
-
-})()
+await gitCommitAllAndPush(
+	`Update source files (${new Date().toISOString()})`,
+	gitEmail,
+	gitName
+)

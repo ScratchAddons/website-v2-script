@@ -1,11 +1,11 @@
-const fs = require("fs-extra")
-const globby = require("globby")
-const path = require("path")
-const chalk = require("chalk")
-const yaml = require("yaml")
-const { addMissingEntries } = require("../recursive-object-functions")
+import fs from "fs-extra"
+import { globbySync } from "globby"
+import path from "path"
+import chalkT from 'chalk-template';
+import yaml from "yaml"
+import { addMissingEntries } from "../recursive-object-functions.js"
 
-module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
+export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
 
 	let languageCode = options.languageCode || undefined
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
@@ -14,9 +14,9 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	fs.ensureDirSync(hugoRepoPath)
 
 	if (!languageCode) languageCode = path.basename(i18nLanguageDirPath)
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
-	console.log(chalk`Compiling {inverse ${languageCodeHugo}} from i18n repo format into Hugo format...`)
+	console.log(chalkT`Compiling {inverse ${languageCodeHugo}} from i18n repo format into Hugo format...`)
 
 	let enHtmlFrontYaml = fs.existsSync(eni18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
 	let htmlFrontYaml = fs.existsSync(i18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
@@ -29,7 +29,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	htmlFrontYaml = addMissingEntries(htmlFrontYaml, enHtmlFrontYaml)
 
 	const inputTestPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "markdown/"]
-	const filesTest = globby.sync(contentGlobPatterns.map(pattern => inputTestPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md") || path.endsWith(".html")).length
+	const filesTest = globbySync(contentGlobPatterns.map(pattern => inputTestPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md") || path.endsWith(".html")).length
 
 	if (!filesTest) {
 		console.log('No HTML and Markdown files that are translated. Skipping these!')
@@ -38,10 +38,10 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	if (filesTest) (() => {
 
 		const inputContentPath = [i18nLanguageDirPath + "html-content/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
+		const files = globbySync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
 
 		const enInputContentPath = [eni18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
-		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(eni18nLanguageDirPath, ''))
+		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
 		console.log(inputContentPath, files, enInputContentPath, enFiles)
 
@@ -58,8 +58,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 			filePath = file.split("html-content/")[1]
 
-			if (useEn) console.log(chalk`Compiling {inverse ${filePath}} (using English)...`)
-			else console.log(chalk`Compiling {inverse ${filePath}}...`)
+			if (useEn) console.log(chalkT`Compiling {inverse ${filePath}} (using English)...`)
+			else console.log(chalkT`Compiling {inverse ${filePath}}...`)
 
 			let output
 
@@ -95,10 +95,10 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	if (filesTest) (() => {
 
 		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))
+		const files = globbySync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))
 
 		const enInputMarkdownPath = [eni18nLanguageDirPath + "markdown/", eni18nLanguageDirPath + "static-markdown/"]
-		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
+		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
 		enFiles.forEach(enFile => {
 			let filePath = enFile.split("markdown/")[1]
@@ -112,8 +112,8 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 			filePath = file.split("markdown/")[1]
 
-			if (useEn) console.log(chalk`Compiling {inverse ${filePath}} (using English)...`)
-			else console.log(chalk`Compiling {inverse ${filePath}}...`)
+			if (useEn) console.log(chalkT`Compiling {inverse ${filePath}} (using English)...`)
+			else console.log(chalkT`Compiling {inverse ${filePath}}...`)
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
 
@@ -142,7 +142,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 	})()
 
 	;(() => {
-		console.log(chalk`Copying Hugo i18n strings file...`)
+		console.log(chalkT`Copying Hugo i18n strings file...`)
 
 		fs.ensureDirSync(`${hugoRepoPath}i18n/`)
 		fs.copyFileSync(i18nLanguageDirPath + "hugo-i18n.yml", hugoRepoPath + `i18n/${languageCodeHugo}.yaml`)
@@ -150,7 +150,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	;(() => {
 		if (!fs.existsSync(i18nLanguageDirPath + "addons-data.json")) return
-		console.log(chalk`Copying addons data...`)
+		console.log(chalkT`Copying addons data...`)
 
 		fs.ensureDirSync(`${hugoRepoPath}data/addons/`)
 		fs.copyFileSync(i18nLanguageDirPath + "addons-data.json", hugoRepoPath + `data/addons/${languageCodeHugo}.json`)
@@ -158,7 +158,7 @@ module.exports = (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, opti
 
 	;(() => {
 		if (!fs.existsSync(i18nLanguageDirPath + "contributor-types.yml")) return
-		console.log(chalk`Copying contributor types file...`)
+		console.log(chalkT`Copying contributor types file...`)
 
 		fs.ensureDirSync(hugoRepoPath + 'data/credits/contributortypes/description/')
 		fs.copyFileSync(i18nLanguageDirPath + "contributor-types.yml", hugoRepoPath + `data/credits/contributortypes/description/${languageCodeHugo}.yml`)

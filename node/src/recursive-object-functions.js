@@ -1,4 +1,4 @@
-const removeSimilarEntries = (objectTarget, objectReference) => {
+export const removeSimilarEntries = (objectTarget, objectReference) => {
 
 	if (!objectTarget) return
 
@@ -15,7 +15,7 @@ const removeSimilarEntries = (objectTarget, objectReference) => {
 
 }
 
-const addMissingEntries = (objectTarget, objectReference) => {
+export const addMissingEntries = (objectTarget, objectReference) => {
 
 	if (!objectTarget || Object.keys(objectTarget).length === 0) return objectReference
 
@@ -28,9 +28,4 @@ const addMissingEntries = (objectTarget, objectReference) => {
 
 	return objectTarget
 
-}
-
-module.exports = {
-	removeSimilarEntries,
-	addMissingEntries
 }
