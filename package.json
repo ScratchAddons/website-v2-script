@@ -25,7 +25,7 @@
     "globby": "^11.0.3",
     "html-minifier": "^4.0.0",
     "ini": "^2.0.0",
-    "matcher": "^4.0.0",
+    "matcher": "^5.0.0",
     "opencc-js": "^1.0.3",
     "prettier": "^2.6.0",
     "simple-git": "^2.39.0",
