@@ -4,7 +4,7 @@ import path from "path"
 import chalk from "chalk"
 import yaml from "yaml"
 import stringSimilarity from "string-similarity"
-import { removeSimilarEntries } from "../recursive-object-functions"
+import { removeSimilarEntries } from "../recursive-object-functions.js"
 
 export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 

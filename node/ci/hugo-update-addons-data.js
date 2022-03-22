@@ -1,4 +1,4 @@
-import compileEn from "../src/addons-data/compile-en"
+import compileEn from "../src/addons-data/compile-en.js"
 
 compileEn(
 	"../sa/", 

@@ -10,7 +10,7 @@ const {
 } = require("./consts.js")
 import fs from "fs-extra"
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js"
-import bulkMapping from "../src/i18n/bulk-mapping"
+import bulkMapping from "../src/i18n/bulk-mapping.js"
 import compileEnToI18n from "../src/i18n/compile-en-to-i18n.js"
 
 if (fs.existsSync("en/")) {

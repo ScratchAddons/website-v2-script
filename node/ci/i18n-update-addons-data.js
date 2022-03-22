@@ -1,9 +1,9 @@
 import { gitEmail, gitName } from "./consts.js"
 import globby from "globby"
 import path from "path"
-import compileEn from "../src/addons-data/compile-en";
-import compileOther from "../src/addons-data/compile-other"
-import removeUntranslated from "../src/i18n/remove-untranslated"
+import compileEn from "../src/addons-data/compile-en.js";
+import compileOther from "../src/addons-data/compile-other.js"
+import removeUntranslated from "../src/i18n/remove-untranslated.js"
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js";
 
 compileEn(

@@ -3,7 +3,7 @@ import globby from "globby"
 import path from "path"
 import chalk from "chalk"
 import yaml from "yaml"
-import { addMissingEntries } from "../recursive-object-functions"
+import { addMissingEntries } from "../recursive-object-functions.js"
 
 export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
 
