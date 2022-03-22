@@ -2,7 +2,6 @@ import fs from "fs-extra"
 import { globbySync } from "globby"
 import path from "path"
 import chalkT from 'chalk-template';
-import chalk from "chalk"
 import yaml from "yaml"
 import stringSimilarity from "string-similarity"
 import { removeSimilarEntries } from "../recursive-object-functions.js"

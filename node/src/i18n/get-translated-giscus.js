@@ -1,6 +1,5 @@
 import fs from "fs-extra"
 import chalkT from 'chalk-template';
-import chalk from "chalk"
 import axios from "axios"
 
 export default async (jsonPath, options = {}) => {

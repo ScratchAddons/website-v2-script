@@ -2,7 +2,6 @@ import fs from "fs-extra"
 import yaml from "yaml"
 import path from "path"
 import chalkT from 'chalk-template';
-import chalk from "chalk"
 
 const getLanguageDisplayName = languageCode => {
 	try {

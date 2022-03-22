@@ -2,7 +2,6 @@ import fs from "fs-extra"
 import { globbySync } from "globby"
 import path from "path"
 import chalkT from 'chalk-template';
-import chalk from "chalk"
 import yaml from "yaml"
 import { addMissingEntries } from "../recursive-object-functions.js"
 
@@ -15,7 +14,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	fs.ensureDirSync(hugoRepoPath)
 
 	if (!languageCode) languageCode = path.basename(i18nLanguageDirPath)
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
 	console.log(chalkT`Compiling {inverse ${languageCodeHugo}} from i18n repo format into Hugo format...`)
 
