@@ -1,6 +1,6 @@
 import fs from "fs-extra"
 import prettier from "prettier"
-import chalkTemplate from 'chalk-template';
+import chalkT from 'chalk-template';
 import chalk from "chalk"
 
 export default (inputPath, outputPath, options) => {

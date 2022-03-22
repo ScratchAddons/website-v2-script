@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import yaml from "yaml"
 import path from "path"
-import chalkTemplate from 'chalk-template';
+import chalkT from 'chalk-template';
 import chalk from "chalk"
 
 export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
@@ -18,7 +18,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {
 
 	if (!i18nStrings) return
 
-	console.log(chalk`Adding {inverse ${languageCodeHugo}} to the list of translated index page...`)
+	console.log(chalkT`Adding {inverse ${languageCodeHugo}} to the list of translated index page...`)
 	translatedIndex.push(languageCodeHugo)
 	fs.outputFileSync(ymlPath, yaml.stringify(translatedIndex, { lineWidth: 0 }))
 

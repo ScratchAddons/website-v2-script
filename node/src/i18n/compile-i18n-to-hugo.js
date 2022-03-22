@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import { globbySync } from "globby"
 import path from "path"
-import chalkTemplate from 'chalk-template';
+import chalkT from 'chalk-template';
 import chalk from "chalk"
 import yaml from "yaml"
 import { addMissingEntries } from "../recursive-object-functions.js"
@@ -17,7 +17,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	if (!languageCode) languageCode = path.basename(i18nLanguageDirPath)
 	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
-	console.log(chalk`Compiling {inverse ${languageCodeHugo}} from i18n repo format into Hugo format...`)
+	console.log(chalkT`Compiling {inverse ${languageCodeHugo}} from i18n repo format into Hugo format...`)
 
 	let enHtmlFrontYaml = fs.existsSync(eni18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(eni18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
 	let htmlFrontYaml = fs.existsSync(i18nLanguageDirPath + "html-front.yml") ? yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", {encoding: "utf-8"})) : {}
@@ -59,8 +59,8 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 
 			filePath = file.split("html-content/")[1]
 
-			if (useEn) console.log(chalk`Compiling {inverse ${filePath}} (using English)...`)
-			else console.log(chalk`Compiling {inverse ${filePath}}...`)
+			if (useEn) console.log(chalkT`Compiling {inverse ${filePath}} (using English)...`)
+			else console.log(chalkT`Compiling {inverse ${filePath}}...`)
 
 			let output
 
@@ -113,8 +113,8 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 
 			filePath = file.split("markdown/")[1]
 
-			if (useEn) console.log(chalk`Compiling {inverse ${filePath}} (using English)...`)
-			else console.log(chalk`Compiling {inverse ${filePath}}...`)
+			if (useEn) console.log(chalkT`Compiling {inverse ${filePath}} (using English)...`)
+			else console.log(chalkT`Compiling {inverse ${filePath}}...`)
 
 			let output = fs.readFileSync(file, {encoding: "utf-8"})
 
@@ -143,7 +143,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	})()
 
 	;(() => {
-		console.log(chalk`Copying Hugo i18n strings file...`)
+		console.log(chalkT`Copying Hugo i18n strings file...`)
 
 		fs.ensureDirSync(`${hugoRepoPath}i18n/`)
 		fs.copyFileSync(i18nLanguageDirPath + "hugo-i18n.yml", hugoRepoPath + `i18n/${languageCodeHugo}.yaml`)
@@ -151,7 +151,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 
 	;(() => {
 		if (!fs.existsSync(i18nLanguageDirPath + "addons-data.json")) return
-		console.log(chalk`Copying addons data...`)
+		console.log(chalkT`Copying addons data...`)
 
 		fs.ensureDirSync(`${hugoRepoPath}data/addons/`)
 		fs.copyFileSync(i18nLanguageDirPath + "addons-data.json", hugoRepoPath + `data/addons/${languageCodeHugo}.json`)
@@ -159,7 +159,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 
 	;(() => {
 		if (!fs.existsSync(i18nLanguageDirPath + "contributor-types.yml")) return
-		console.log(chalk`Copying contributor types file...`)
+		console.log(chalkT`Copying contributor types file...`)
 
 		fs.ensureDirSync(hugoRepoPath + 'data/credits/contributortypes/description/')
 		fs.copyFileSync(i18nLanguageDirPath + "contributor-types.yml", hugoRepoPath + `data/credits/contributortypes/description/${languageCodeHugo}.yml`)

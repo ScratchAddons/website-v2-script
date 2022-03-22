@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import { globbySync } from "globby"
 import path from "path"
-import chalkTemplate from 'chalk-template';
+import chalkT from 'chalk-template';
 import chalk from "chalk"
 import yaml from "yaml"
 import stringSimilarity from "string-similarity"
@@ -11,7 +11,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 	let languageCode = options.languageCode || path.basename(i18nLanguageDirPath)
 
-	console.log(chalk`Removing untranslated files on {inverse ${languageCode}}...`)
+	console.log(chalkT`Removing untranslated files on {inverse ${languageCode}}...`)
 
 	let globPatterns = options.globPatterns || ["**"]
 
@@ -23,7 +23,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 	filesRelLang.forEach(filePath => {
 		if (!filesRelEn.includes(filePath)) {
-			console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is not found on English. Removing...`)
+			console.log(chalkT`{inverse ${i18nLanguageDirPath}${filePath}} is not found on English. Removing...`)
 			fs.removeSync(i18nLanguageDirPath + filePath)
 		}
 	})
@@ -41,14 +41,14 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 			if (JSON.stringify(result) === JSON.stringify(yaml.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")))) return
 
-			console.log(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+			console.log(chalkT`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
 
 			if (result && Object.keys(result).length) fs.writeFileSync(i18nLanguageDirPath + filePath, yaml.stringify(result, { lineWidth: 0 }))
 			else fs.writeFileSync(i18nLanguageDirPath + filePath, "")
 
 		// } else if (filePath === "html-front.yml") {
 
-		// 	console.log(chalk`Removing unused strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+		// 	console.log(chalkT`Removing unused strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
 
 		// 	let result = yaml.parse(fs.readFileSync(i18nLanguageDirPath + "html-front.yml", "utf-8"))
 
@@ -65,7 +65,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 				fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8").trim() === fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8").trim() ||
 				stringSimilarity.compareTwoStrings(fs.readFileSync(eni18nLanguageDirPath + filePath, "utf-8").trim(), fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8").trim()) === 1
 			) {
-				console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
+				console.log(chalkT`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
 				fs.removeSync(i18nLanguageDirPath + filePath)
 			// } else {
 			// 	console.log(i18nLanguageDirPath + filePath + " is different")

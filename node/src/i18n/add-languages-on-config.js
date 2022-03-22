@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import yaml from "yaml"
 import path from "path"
-import chalkTemplate from 'chalk-template';
+import chalkT from 'chalk-template';
 import chalk from "chalk"
 
 const getLanguageDisplayName = languageCode => {
@@ -27,7 +27,7 @@ export default (i18nLanguageDirPath, configPath, options = {}) => {
 	}
 	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
-	console.log(chalk`Adding {inverse ${languageCodeHugo}} to the site config...`)
+	console.log(chalkT`Adding {inverse ${languageCodeHugo}} to the site config...`)
 
 	const languageName = getLanguageDisplayName(languageCodeHugo)
 
