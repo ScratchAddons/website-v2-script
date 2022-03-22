@@ -1,12 +1,12 @@
 import fs from "fs-extra"
-import globby from "globby"
+import { globbySync } from "globby"
 import ini from "ini"
 
 export default (i18nPath, orgSlug, projId) => {
 	let txConfigIni = ini.parse(fs.readFileSync(`${i18nPath}.tx/config`, "utf-8"))
 	
 	const resourceFileInConfig = Object.entries(txConfigIni).filter(item => item[1].type && (item[1].type === 'HTML_FRAGMENT' || item[1].type === 'GITHUBMARKDOWN')).map(item => item[1].source_file)
-	const resourceFilesInLocal = globby.sync([`${i18nPath}en/html-content/**`, `${i18nPath}en/markdown/**`]).map(path => path.replace(i18nPath, ''))
+	const resourceFilesInLocal = globbySync([`${i18nPath}en/html-content/**`, `${i18nPath}en/markdown/**`]).map(path => path.replace(i18nPath, ''))
 
 	console.log(resourceFilesInLocal)
 

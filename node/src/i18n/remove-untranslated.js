@@ -1,5 +1,5 @@
 import fs from "fs-extra"
-import globby from "globby"
+import { globbySync } from "globby"
 import path from "path"
 import chalk from "chalk"
 import yaml from "yaml"
@@ -14,8 +14,8 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 	let globPatterns = options.globPatterns || ["**"]
 
-	const filesEn = globby.sync(globPatterns.map(pattern => eni18nLanguageDirPath + pattern))
-	const filesLang = globby.sync(globPatterns.map(pattern => i18nLanguageDirPath + pattern))
+	const filesEn = globbySync(globPatterns.map(pattern => eni18nLanguageDirPath + pattern))
+	const filesLang = globbySync(globPatterns.map(pattern => i18nLanguageDirPath + pattern))
 
 	const filesRelEn = filesEn.map(path => path.slice(eni18nLanguageDirPath.length))
 	const filesRelLang = filesLang.map(path => path.slice(i18nLanguageDirPath.length))

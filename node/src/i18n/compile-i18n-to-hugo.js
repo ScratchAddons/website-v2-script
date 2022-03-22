@@ -1,5 +1,5 @@
 import fs from "fs-extra"
-import globby from "globby"
+import { globbySync } from "globby"
 import path from "path"
 import chalk from "chalk"
 import yaml from "yaml"
@@ -29,7 +29,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	htmlFrontYaml = addMissingEntries(htmlFrontYaml, enHtmlFrontYaml)
 
 	const inputTestPath = [i18nLanguageDirPath + "html-content/", i18nLanguageDirPath + "markdown/"]
-	const filesTest = globby.sync(contentGlobPatterns.map(pattern => inputTestPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md") || path.endsWith(".html")).length
+	const filesTest = globbySync(contentGlobPatterns.map(pattern => inputTestPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md") || path.endsWith(".html")).length
 
 	if (!filesTest) {
 		console.log('No HTML and Markdown files that are translated. Skipping these!')
@@ -38,10 +38,10 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	if (filesTest) (() => {
 
 		const inputContentPath = [i18nLanguageDirPath + "html-content/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
+		const files = globbySync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
 
 		const enInputContentPath = [eni18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
-		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(eni18nLanguageDirPath, ''))
+		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
 		console.log(inputContentPath, files, enInputContentPath, enFiles)
 
@@ -95,10 +95,10 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	if (filesTest) (() => {
 
 		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/"]
-		const files = globby.sync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))
+		const files = globbySync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))
 
 		const enInputMarkdownPath = [eni18nLanguageDirPath + "markdown/", eni18nLanguageDirPath + "static-markdown/"]
-		const enFiles = globby.sync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
+		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
 		enFiles.forEach(enFile => {
 			let filePath = enFile.split("markdown/")[1]

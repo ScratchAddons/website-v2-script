@@ -1,5 +1,5 @@
 import fs from "fs-extra"
-import globby from "globby"
+import { globbySync } from "globby"
 import yaml from "yaml"
 import chalk from "chalk"
 import htmlMinifier from "html-minifier"
@@ -35,7 +35,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 	console.log("Compiling en from Hugo format into i18n repo format...")
 
 	console.log(contentGlobPatterns.map(pattern => hugoRepoPath + "content/" + pattern))
-	let contentFiles = globby.sync(contentGlobPatterns.map(pattern => {
+	let contentFiles = globbySync(contentGlobPatterns.map(pattern => {
 		if (pattern.startsWith("!")) return "!" + hugoRepoPath + "content/" + pattern.slice("1")
 		return hugoRepoPath + "content/" + pattern
 	}))
