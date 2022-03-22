@@ -11,7 +11,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {
 	if (!languageCode) {
 		languageCode = path.basename(i18nLanguageDirPath)
 	}
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
 	const i18nStrings = yaml.parse(fs.readFileSync(i18nLanguageDirPath + "hugo-i18n.yml", "utf-8"))
 

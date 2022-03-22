@@ -24,7 +24,7 @@ export default (i18nLanguageDirPath, configPath, options = {}) => {
 	if (!languageCode) {
 		languageCode = path.basename(i18nLanguageDirPath)
 	}
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
 	console.log(chalkT`Adding {inverse ${languageCodeHugo}} to the site config...`)
 
