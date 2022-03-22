@@ -1,4 +1,4 @@
-const { 
+import { 
 	contentGlobPatterns, 
 	translatableFrontMatterFields, 
 	excludedFrontMatterFields,
@@ -7,7 +7,7 @@ const {
 	txProjectSlug,
 	gitEmail,
 	gitName
-} = require("./consts.js")
+} from "./consts.js"
 import fs from "fs-extra"
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js"
 import bulkMapping from "../src/i18n/bulk-mapping.js"
