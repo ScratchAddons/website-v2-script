@@ -16,7 +16,7 @@ globbySync(["./*", "!./en"], {
 }).forEach(langPath => {
 
 	const languageCode = path.basename(langPath)
-	languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
+	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
 	compileOther(
 		"../sa/", 
