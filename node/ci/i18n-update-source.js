@@ -9,7 +9,7 @@ import {
 	gitName
 } from "./consts.js"
 import fs from "fs-extra"
-import removeGlob from "../src/remove-glob"
+import removeGlob from "../src/remove-glob.js"
 import compileEnToI18n from "../src/i18n/compile-en-to-i18n.js"
 import bulkMapping from "../src/i18n/bulk-mapping.js"
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js"
