@@ -1,6 +1,7 @@
 import axios from "axios"
 import fs from "fs-extra"
 import prettier from "prettier"
+import chalkTemplate from 'chalk-template';
 import chalk from "chalk"
 
 const dataset = []

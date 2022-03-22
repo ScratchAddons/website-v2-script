@@ -1,6 +1,7 @@
 import fs from "fs-extra"
 import { globbySync } from "globby"
 import path from "path"
+import chalkTemplate from 'chalk-template';
 import chalk from "chalk"
 import yaml from "yaml"
 import { addMissingEntries } from "../recursive-object-functions.js"

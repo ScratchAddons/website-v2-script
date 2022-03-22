@@ -1,4 +1,5 @@
 import { globbySync } from "globby"
+import chalkTemplate from 'chalk-template';
 import chalk from "chalk"
 import fs from "fs-extra"
 

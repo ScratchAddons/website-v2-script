@@ -1,6 +1,7 @@
 import fs from "fs-extra"
 import { globbySync } from "globby"
 import yaml from "yaml"
+import chalkTemplate from 'chalk-template';
 import chalk from "chalk"
 import htmlMinifier from "html-minifier"
 
