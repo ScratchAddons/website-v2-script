@@ -29,7 +29,7 @@
     "matcher": "^5.0.0",
     "opencc-js": "^1.0.3",
     "prettier": "^2.6.2",
-    "simple-git": "^3.6.0",
+    "simple-git": "^3.7.0",
     "string-similarity": "^4.0.4",
     "yaml": "^2.0.0-6"
   }
