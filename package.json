@@ -27,7 +27,7 @@
     "html-minifier": "^4.0.0",
     "ini": "^3.0.0",
     "matcher": "^5.0.0",
-    "opencc-js": "^1.0.3",
+    "opencc-js": "^1.0.4",
     "prettier": "^2.6.2",
     "simple-git": "^3.7.1",
     "string-similarity": "^4.0.4",
