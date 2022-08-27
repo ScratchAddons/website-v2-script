@@ -1,6 +1,6 @@
 // const { danger, message, warn, fail, markdown } = require("danger");
 // const { danger } = require("danger");
-import { message, warn, fail, markdown, arbitrary, generateText } from './src/danger/emulator.js'
+import { message, warn, fail, markdown, arbitrary, generateText } from '../src/danger/emulator.js'
 import { run as getChangedFiles } from '../src/danger/changed-files.js'
 import fs from 'fs-extra'
 import { matcher } from 'matcher'
