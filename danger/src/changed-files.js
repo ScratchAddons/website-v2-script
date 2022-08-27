@@ -31,7 +31,7 @@ async function getChangedFilesPR(client, prNumber, fileCount) {
     const changedFiles = new ChangedFiles()
     const fetchPerPage = 100
     for (let pageIndex = 1; (pageIndex - 1) * fetchPerPage < fileCount; pageIndex++) {
-        const listFilesResponse = await client.pulls.listFiles({
+        const listFilesResponse = await client.rest.pulls.listFiles({
             owner: context.repo.owner,
             repo: context.repo.repo,
             pull_number: prNumber,
@@ -112,7 +112,4 @@ export async function run() {
 
 }
 
-run().catch(err => {
-    console.error(err)
-    console.error(`Unhandled error: ${err}`)
-})
+run()
