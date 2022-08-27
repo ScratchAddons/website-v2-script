@@ -1,7 +1,7 @@
 // const { danger, message, warn, fail, markdown } = require("danger");
 // const { danger } = require("danger");
-import { message, warn, fail, markdown, arbitrary, generateText } from './danger-src/emulator.js'
-import { run as getChangedFiles } from './danger-rc/changed-files.js'
+import { message, warn, fail, markdown, arbitrary, generateText } from './src/emulator.js'
+import { run as getChangedFiles } from './src/changed-files.js'
 import fs from 'fs-extra'
 
 const changedFiles = await getChangedFiles()
