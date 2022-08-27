@@ -9,11 +9,11 @@ import { context } from "@actions/github"
 const changedFiles = await getChangedFiles()
 
 // No PR is too small to include a description of why you made a change
-console.log(context.payload.pull_request.body)
-if (context.payload.pull_request.body && context.payload.pull_request.body < 10) {
+if (!context.payload.pull_request.body || context.payload.pull_request.body < 10) {
 	warn("Please include a description of your changes on the PR body.")
 }
 
+console.log(changedFiles.changed, matcher(changedFiles.changed, ['docs/policies/privacy/**']))
 if (matcher(changedFiles.changed, ['docs/policies/privacy/**'])) {
 	warn("Changes made on the Privacy Policy. Further review by @ WorldLanguages is needed.")
 }
