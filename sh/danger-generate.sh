@@ -5,4 +5,4 @@ node ../script/danger/generate.js
 # rm -rf dangerfile.js
 # rm -rf danger-src/
 echo $PR_NUMBER > ./pr-number
-mv dangerfile-new.js dangerfile.js
+# mv dangerfile-new.js dangerfile.js
