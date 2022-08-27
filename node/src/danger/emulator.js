@@ -12,7 +12,7 @@ const stringToArgument = arg => {
  * @param line the line which this message should be attached to
  */
 export const warn = (message, file, line) => {
-	printDangerCodeLine('warn', message, file, line)
+	addDangerCodeLine('warn', message, file, line)
 }
 
 /**
@@ -22,7 +22,7 @@ export const warn = (message, file, line) => {
  * @param line the line which this message should be attached to
  */
 export const message = (message, file, line) => {
-	printDangerCodeLine('message', message, file, line)
+	addDangerCodeLine('message', message, file, line)
 }
 
 /**
@@ -32,7 +32,7 @@ export const message = (message, file, line) => {
  * @param line the line which this message should be attached to
  */
 export const fail = (message, file, line) => {
-	printDangerCodeLine('fail', message, file, line)
+	addDangerCodeLine('fail', message, file, line)
 }
 
 /**
@@ -42,7 +42,7 @@ export const fail = (message, file, line) => {
  * @param line the line which this message should be attached to
  */
 export const markdown = (message, file, line) => {
-	printDangerCodeLine('markdown', message, file, line)
+	addDangerCodeLine('markdown', message, file, line)
 }
 
 /**
@@ -51,23 +51,31 @@ export const markdown = (message, file, line) => {
  * @param  {...any} args Arguments of the function.
  * @returns 
  */
-const printDangerCodeLine = (name, ...args) => {
+const addDangerCodeLine = (name, ...args) => {
 	while (args[args.length - 1] === undefined) {
 		args.pop()
 	}
-	lines.push(`${name}(${args.map(el => stringToArgument(el)).join(', ')})`)
+	addLine(`${name}(${args.map(el => stringToArgument(el)).join(', ')})`)
 }
 
 /**
- * Adds aribitrary code to run on the Dangerfile
- * @param {string} arbitrary Arbitrary code to run
+ * Adds aribitrary code to run on the Dangerfile.
+ * @param {string} arbitrary Arbitrary code to run.
  */
 export const arbitrary = (arbitrary) => {
-	lines.push(arbitrary)
+	addLine(arbitrary)
 }
 
 /**
- * Generates a text to be saved as dangerfile.js
+ * Adds a line to the dangerfile.js
+ * @param {string} line A code line to add.
+ */
+const addLine = (line) => {
+	lines.push(line)
+}
+
+/**
+ * Generates a text of the dangerfile.js
  * @returns dangerfile.js file
  */
 export const generateText = () => {
