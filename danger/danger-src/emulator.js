@@ -1,4 +1,9 @@
 const lines = []
+const stringToArgument = arg => {
+	if (typeof arg === "string") {
+		return `\`${arg}\``
+	} else return arg
+}
 
 /**
  * Highlights low-priority issues, but does not fail the build. Message is shown inside a HTML table.
@@ -6,8 +11,8 @@ const lines = []
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-export const warn = (message, file, line) => {
-	lines.push(`warn(${message}, ${file}, ${line})`)
+exports.warn = (message, file, line) => {
+	lines.push(`warn(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
 /**
@@ -16,8 +21,8 @@ export const warn = (message, file, line) => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-export const message = (message, file, line) => {
-	lines.push(`message(${message}, ${file}, ${line})`)
+exports.message = (message, file, line) => {
+	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
 /**
@@ -26,8 +31,8 @@ export const message = (message, file, line) => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-export const fail = (message, file, line) => {
-	lines.push(`fail(${message}, ${file}, ${line})`)
+exports.fail = (message, file, line) => {
+	lines.push(`fail(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
 /**
@@ -36,6 +41,12 @@ export const fail = (message, file, line) => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-export const markdown = (message, file, line) => {
-	lines.push(`message(${message}, ${file}, ${line})`)
+exports.markdown = (message, file, line) => {
+	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
+
+exports.generateText = () => {
+	return `const { danger, message, warn, fail, markdown } = require("danger");
+${lines.join('\n')}`
+}
+
