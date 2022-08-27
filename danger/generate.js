@@ -13,7 +13,7 @@ console.log('removed', changedFiles.removed)
 // No PR is too small to include a description of why you made a change
 arbitrary(`
 if (danger.github.pr.body.length < 10) {
-	warn("Please include a description of your PR changes.");
+	warn("Please include a description of your changes on the PR body.");
 }
 `)
 
