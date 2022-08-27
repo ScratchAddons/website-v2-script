@@ -55,7 +55,7 @@ const printDangerCodeLine = (name, ...args) => {
 	while (args[args.length - 1] === undefined) {
 		args.pop()
 	}
-	return `${name}(${args.map(el => stringToArgument(el)).join(', ')})`
+	lines.push(`${name}(${args.map(el => stringToArgument(el)).join(', ')})`)
 }
 
 /**
