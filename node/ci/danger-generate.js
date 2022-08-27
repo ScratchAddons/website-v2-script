@@ -13,9 +13,9 @@ if (!context.payload.pull_request.body || context.payload.pull_request.body < 10
 	warn("Please include a description of your changes on the PR body.")
 }
 
-console.log(changedFiles.changed, matcher(changedFiles.changed, ['docs/policies/privacy/**']))
-if (matcher(changedFiles.changed, ['docs/policies/privacy/**'])) {
-	warn("Changes made on the Privacy Policy. Further review by @ WorldLanguages is needed.")
+// Attention required on privacy policy edits
+if (matcher(changedFiles.changed, ['content/docs/policies/privacy/**'])) {
+	warn("Changes made on the privacy policy. Further review by @ WorldLanguages is needed.")
 }
 
 fs.outputFileSync('../dangerfile.js', generateText())
