@@ -1,4 +1,5 @@
 # cp -r ../script/danger/. ./
+echo > dangerfile.js
 npm ci --prefix ../script
 node ../script/danger/generate.js
 # npx danger ci --text-only --verbose
