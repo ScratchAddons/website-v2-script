@@ -10,4 +10,4 @@ if (danger.github.pr.body.length < 10) {
 }
 `)
 
-fs.outputFileSync('dangerfile.js', generateText())
+fs.outputFileSync('../dangerfile.js', generateText())
