@@ -105,9 +105,14 @@ export async function run() {
     }
 
     return {
-		created: changedFiles.created || [],
-		updated: changedFiles.updated || [],
-		deleted: changedFiles.deleted || [],
+		created: changedFiles.created,
+		updated: changedFiles.updated,
+		deleted: changedFiles.deleted,
+        changed: [
+            ...changedFiles.created,
+            ...changedFiles.updated,
+            ...changedFiles.deleted
+        ]
 	}
 
 }
