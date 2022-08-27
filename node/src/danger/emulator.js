@@ -12,7 +12,7 @@ const stringToArgument = arg => {
  * @param line the line which this message should be attached to
  */
 export const warn = (message, file, line) => {
-	lines.push(`warn(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
+	printDangerCodeLine('warn', message, file, line)
 }
 
 /**
@@ -22,7 +22,7 @@ export const warn = (message, file, line) => {
  * @param line the line which this message should be attached to
  */
 export const message = (message, file, line) => {
-	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
+	printDangerCodeLine('message', message, file, line)
 }
 
 /**
@@ -32,7 +32,7 @@ export const message = (message, file, line) => {
  * @param line the line which this message should be attached to
  */
 export const fail = (message, file, line) => {
-	lines.push(`fail(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
+	printDangerCodeLine('fail', message, file, line)
 }
 
 /**
@@ -42,7 +42,20 @@ export const fail = (message, file, line) => {
  * @param line the line which this message should be attached to
  */
 export const markdown = (message, file, line) => {
-	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
+	printDangerCodeLine('markdown', message, file, line)
+}
+
+/**
+ * Adds a function.
+ * @param {string} name Name of the function.
+ * @param  {...any} args Arguments of the function.
+ * @returns 
+ */
+const printDangerCodeLine = (name, ...args) => {
+	while (args[args.length - 1] === undefined) {
+		args.pop()
+	}
+	return `${name}(${args.map(el => stringToArgument(el)).join(', ')})`
 }
 
 /**
