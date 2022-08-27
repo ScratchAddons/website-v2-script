@@ -15,7 +15,7 @@ if (danger.github.pr.body.length < 10) {
 `)
 
 if (matcher(changedFiles.changed, ['docs/policies/privacy/**'])) {
-	warn("There are changes on the Privacy Policy. Further review by @ WorldLanguages is required.")
+	warn("Changes made on the Privacy Policy. Further review by @ WorldLanguages is needed.")
 }
 
 fs.outputFileSync('../dangerfile.js', generateText())
