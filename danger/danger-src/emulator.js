@@ -45,6 +45,18 @@ exports.markdown = (message, file, line) => {
 	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
+/**
+ * Adds aribitrary code to run on the Dangerfile
+ * @param {string} arbitrary Arbitrary code to run
+ */
+exports.arbitrary = (arbitrary) => {
+	lines.push(arbitrary)
+}
+
+/**
+ * Generates a text to be saved as dangerfile.js
+ * @returns dangerfile.js file
+ */
 exports.generateText = () => {
 	return `const { danger, message, warn, fail, markdown } = require("danger");
 ${lines.join('\n')}`
