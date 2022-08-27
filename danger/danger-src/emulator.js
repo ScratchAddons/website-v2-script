@@ -11,7 +11,7 @@ const stringToArgument = arg => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-exports.warn = (message, file, line) => {
+export const warn = (message, file, line) => {
 	lines.push(`warn(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
@@ -21,7 +21,7 @@ exports.warn = (message, file, line) => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-exports.message = (message, file, line) => {
+export const message = (message, file, line) => {
 	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
@@ -31,7 +31,7 @@ exports.message = (message, file, line) => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-exports.fail = (message, file, line) => {
+export const fail = (message, file, line) => {
 	lines.push(`fail(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
@@ -41,7 +41,7 @@ exports.fail = (message, file, line) => {
  * @param file a file which this message should be attached to
  * @param line the line which this message should be attached to
  */
-exports.markdown = (message, file, line) => {
+export const markdown = (message, file, line) => {
 	lines.push(`message(${stringToArgument(message)}, ${stringToArgument(file)}, ${stringToArgument(line)})`)
 }
 
@@ -49,7 +49,7 @@ exports.markdown = (message, file, line) => {
  * Adds aribitrary code to run on the Dangerfile
  * @param {string} arbitrary Arbitrary code to run
  */
-exports.arbitrary = (arbitrary) => {
+export const arbitrary = (arbitrary) => {
 	lines.push(arbitrary)
 }
 
@@ -57,7 +57,7 @@ exports.arbitrary = (arbitrary) => {
  * Generates a text to be saved as dangerfile.js
  * @returns dangerfile.js file
  */
-exports.generateText = () => {
+export const generateText = () => {
 	return `const { danger, message, warn, fail, markdown } = require("danger");
 ${lines.join('\n')}`
 }

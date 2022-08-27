@@ -1,7 +1,7 @@
 // const { danger, message, warn, fail, markdown } = require("danger");
 // const { danger } = require("danger");
-const { message, warn, fail, markdown, arbitrary, generateText } = require('./danger-src/emulator')
-const fs = require('fs-extra')
+import { message, warn, fail, markdown, arbitrary, generateText } from './danger-src/emulator'
+import fs from 'fs-extra'
 
 // No PR is too small to include a description of why you made a change
 arbitrary(`
