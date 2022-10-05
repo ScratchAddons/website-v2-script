@@ -20,7 +20,7 @@
   "dependencies": {
     "@actions/github": "^5.1.1",
     "axios": "^0.27.2",
-    "chalk": "^5.0.1",
+    "chalk": "^5.1.0",
     "chalk-template": "^0.4.0",
     "cross-spawn": "^7.0.3",
     "danger": "^11.1.4",
