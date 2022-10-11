@@ -1,3 +1,4 @@
+import fs from "fs/promises"
 import simpleGit from "simple-git"
 
 const git = simpleGit("./")
@@ -6,11 +7,11 @@ export default async (commitMessage, gitEmail, gitName) => {
 
 	if ((await git.status()).files.length === 0) {
 		console.log("No files changed. Skipping.")
-		console.log("::set-output name=has_new_commit::false")
+		fs.writeFile(process.env.GITHUB_OUTPUT, 'has_new_commit=false')
 		return
 	}
 
-	console.log("::set-output name=has_new_commit::true")
+	fs.writeFile(process.env.GITHUB_OUTPUT, 'has_new_commit=true')
 	
 	console.log("Commiting all files...")
 	console.log(`user: ${gitName} <${gitEmail}>`)
