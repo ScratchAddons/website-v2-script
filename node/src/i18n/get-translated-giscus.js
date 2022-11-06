@@ -4,7 +4,7 @@ import axios from "axios"
 
 export default async (jsonPath, options = {}) => {
 
-	const giscusi18n = await axios.get('https://raw.githubusercontent.com/giscus/giscus/main/i18n.json')
+	const giscusi18n = await axios.get('https://raw.githubusercontent.com/giscus/giscus/main/i18n.js')
 		.then(response => response.data)
 		.then(data => JSON.parse(`{ "locales": ${data.match(/locales:\s*(\[.+?])/s)[1].replaceAll('\'', '"').replace(/,\s*?]/s, ']')}}`))
 
