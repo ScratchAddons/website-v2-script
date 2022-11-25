@@ -30,7 +30,7 @@
     "ini": "^3.0.1",
     "matcher": "^5.0.0",
     "opencc-js": "^1.0.5",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.0",
     "simple-git": "^3.15.0",
     "string-similarity": "^4.0.4",
     "yaml": "^2.1.3"
