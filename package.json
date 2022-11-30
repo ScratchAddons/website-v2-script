@@ -24,7 +24,7 @@
     "chalk-template": "^0.4.0",
     "cross-spawn": "^7.0.3",
     "danger": "^11.2.0",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.1.0",
     "globby": "^13.1.2",
     "html-minifier": "^4.0.0",
     "ini": "^3.0.1",
