@@ -43,18 +43,18 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 		const enInputContentPath = [eni18nLanguageDirPath + "html-content/", eni18nLanguageDirPath + "static-html-content/"]
 		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
-		console.log(inputContentPath, files, enInputContentPath, enFiles)
+		// console.log(inputContentPath, files, enInputContentPath, enFiles)
 
 		enFiles.forEach(enFile => {
 
 			let filePath = enFile.split("html-content/")[1]
 			let useEn = false
-			let file
+			let file = i18nLanguageDirPath + enFile
 
-			if (!files.includes(enFile)) {
+			if (!files.includes(enFile) || fs.readFileSync(file, {encoding: "utf-8"}).includes("504 Gateway Time-out")) {
 				file = eni18nLanguageDirPath + enFile
 				useEn = true
-			} else file = i18nLanguageDirPath + enFile
+			}
 
 			filePath = file.split("html-content/")[1]
 
@@ -103,12 +103,12 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 		enFiles.forEach(enFile => {
 			let filePath = enFile.split("markdown/")[1]
 			let useEn = false
-			let file
+			let file = i18nLanguageDirPath + enFile
 
-			if (!files.includes(enFile)) {
+			if (!files.includes(enFile) || fs.readFileSync(file, {encoding: "utf-8"}).includes("504 Gateway Time-out")) {
 				file = eni18nLanguageDirPath + enFile
 				useEn = true
-			} else file = i18nLanguageDirPath + enFile
+			}
 
 			filePath = file.split("markdown/")[1]
 
