@@ -29,12 +29,26 @@ export default (inputPath, outputPath, options) => {
 
 			console.log(`Pushing manifest of ${chalk.inverse(addon)}...`)
 
+			for (let i in manifest.info) {
+				const id = manifest.info[i].id
+				manifest.info[i].text = l10nFile?.[`${addon}/@info-${id}`] || manifest.info[i].text 
+			}
+
 			dataset.push({
 				id: addon,
-				name: l10nFile[`${addon}/@name`] ? l10nFile[`${addon}/@name`] : manifest.name,
-				description: l10nFile[`${addon}/@description`] ? l10nFile[`${addon}/@description`] : manifest.description,
+				name: l10nFile?.[`${addon}/@name`] || manifest.name,
+				description: l10nFile?.[`${addon}/@description`] || manifest.description,
 				tags: manifest.tags,
-				credits: manifest.credits,
+				credits: manifest?.credits,
+				info: manifest?.info,
+				dynamicEnable: manifest?.dynamicEnable,
+				dynamicDisable: manifest?.dynamicDisable,
+				enabledByDefault: manifest?.enabledByDefault,
+				libraries: manifest?.libraries,
+				versionAdded: manifest.versionAdded,
+				latestUpdate: manifest?.latestUpdate,
+				injectAsStyleElt: manifest?.injectAsStyleElt,
+				updateUserstylesOnSettingsChange: manifest?.updateUserstylesOnSettingsChange
 			})
 
 		} else {
