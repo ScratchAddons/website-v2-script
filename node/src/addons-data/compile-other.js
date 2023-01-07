@@ -60,7 +60,16 @@ export default (inputPath, outputPath, options) => {
 				name: manifest.name,
 				description: manifest.description,
 				tags: manifest.tags,
-				credits: manifest.credits,
+				credits: manifest?.credits,
+				info: manifest?.info,
+				dynamicEnable: manifest?.dynamicEnable,
+				dynamicDisable: manifest?.dynamicDisable,
+				enabledByDefault: manifest?.enabledByDefault,
+				libraries: manifest?.libraries,
+				versionAdded: manifest.versionAdded,
+				latestUpdate: manifest?.latestUpdate,
+				injectAsStyleElt: manifest?.injectAsStyleElt,
+				updateUserstylesOnSettingsChange: manifest?.updateUserstylesOnSettingsChange
 			})	
 
 		}
