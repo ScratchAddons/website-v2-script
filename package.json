@@ -31,7 +31,7 @@
     "matcher": "^5.0.0",
     "opencc-js": "^1.0.5",
     "prettier": "^2.8.1",
-    "simple-git": "^3.15.1",
+    "simple-git": "^3.16.0",
     "string-similarity": "^4.0.4",
     "yaml": "^2.2.1"
   }
