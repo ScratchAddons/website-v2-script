@@ -10,6 +10,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	let languageCode = options.languageCode || undefined
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
 	// let translatableFrontMatterFields = options.translatableFrontMatterFields || []
+	let pathTranslationExceptionRegexPatterns = options.pathTranslationExceptionRegexPatterns || []
 	
 	fs.ensureDirSync(hugoRepoPath)
 
@@ -74,8 +75,6 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 						.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
 						.replace(/https:\/\/scratchaddons\.com\/(.+?)#hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"/$1\" >}}")
 						.replace(/https:\/\/scratchaddons\.com#(.+?)_hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"$1\" >}}")
-						 // HOTFIX: Remove after all instance of &lt;a and tx_gtsymbol gone on i18n repo
-						.replace(/tx_gtsymbol/g, ">").replace(/&lt;a/g, "<a")
 						.replace(/HESTART(.+?)HEEND/g, (match, p2, offset, string) => {
 							return `\{\{${decodeURI(p2)}\}\}`
 						})
@@ -125,10 +124,23 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 
 			if (output[1]) {
 
+				// Sanitize by converting 
 				const excludedTags = ["title", "textarea", "style", "xmp", "iframe", "noembed", "noframes", "script", "plaintext"]
 
 				output[1] = output[1]
+
+					// Sanitize elements with excluded tags.
 					.replace(new RegExp(`<(\/?\s*?)(${excludedTags.join("|")})(.*?)>`, "gi"), "&lt;$1$2$3>")
+
+					// Translate paths to their respective languages
+					.replace(/(?<!!)\[([^\[]+)\]\((.*)\)/g, (match, linkText, linkHref) => {
+						if (!linkHref.startsWith('/')) return match
+						if (pathTranslationExceptionRegexPatterns.some(pattern => {
+							return new RegExp(pattern, "g").test(linkHref)
+						})) return match
+						return `[${linkText}](/${languageCodeHugo}${linkHref})`
+					})
+	
 
 			}
 
