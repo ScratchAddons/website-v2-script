@@ -196,6 +196,33 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 		fs.copyFileSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml", i18nRepoPath + "contributor-types.yml")
 	})()
 
+	;(() => {
+		if (!fs.existsSync(hugoRepoPath + "data/changelog.yml")) return
+
+		console.log(chalk`Copying translatable changelog file...`)
+
+		const changelogToTranslate = {}
+
+		const changelog = yaml.parse(fs.readFileSync(hugoRepoPath + "data/changelog.yml").toString())
+
+		changelog.forEach(entry => {
+			const entryToTranslate = {}
+			if (entry.Name !== entry.Version) entryToTranslate.Name = entry.Name
+			// entryToTranslate.entry = entry.entry
+			if (entry?.Highlights?.Description) {
+				entryToTranslate.Highlights ||= {}
+				entryToTranslate.Highlights.Description = entry.Highlights.Description
+			}
+			if (entry?.Highlights?.ImageAlt) {
+				entryToTranslate.Highlights ||= {}
+				entryToTranslate.Highlights.ImageAlt = entry.Highlights.ImageAlt
+			}
+			if (Object.keys(entryToTranslate).length) changelogToTranslate[entry.Version] = entryToTranslate
+		})
+
+		fs.writeFileSync(i18nRepoPath + "changelog.yml", yaml.stringify(changelogToTranslate))
+	})()
+
 	console.log("Compiling done!")
 
 }

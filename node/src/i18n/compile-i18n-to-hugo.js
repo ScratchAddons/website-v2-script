@@ -176,6 +176,14 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 		fs.copyFileSync(i18nLanguageDirPath + "contributor-types.yml", hugoRepoPath + `data/credits/contributortypes/description/${languageCodeHugo}.yml`)
 	})()
 
+	;(() => {
+		if (!fs.existsSync(i18nLanguageDirPath + "contributor-types.yml")) return
+		console.log(chalk`Copying translatable changelog file...`)
+
+		fs.ensureDirSync(hugoRepoPath + 'data/changelogi18n/')
+		fs.copyFileSync(i18nLanguageDirPath + "contributor-types.yml", hugoRepoPath + `data/changelogi18n/${languageCodeHugo}.yml`)
+	})()
+
 	console.log("Compiling done!")
 
 }
