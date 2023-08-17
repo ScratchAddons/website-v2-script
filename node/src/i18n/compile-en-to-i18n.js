@@ -22,6 +22,29 @@ const minifierOptions = {
 
 const allIndex = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 
+const buildIgnoreI18n = ignoreI18nRaw => {
+	const ignoreI18n = {
+		frontMatter: false,
+		content: false
+	}
+
+	switch (ignoreI18nRaw) {
+		case true:
+		case "all":
+			ignoreI18n.frontMatter = true
+			ignoreI18n.content = true				
+			break
+		case "front-matter":
+			ignoreI18n.frontMatter = true
+			break
+		case "content":
+			ignoreI18n.content = true
+			break
+	}
+
+	return ignoreI18n
+}
+
 export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
@@ -57,8 +80,9 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 				let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
 				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
+				const ignoreI18n = buildIgnoreI18n(frontMatter?.ignore_i18n)
 	
-				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
+				if (ignoreI18n.frontMatter && ignoreI18n.content) return
 				console.log(chalk`Compiling {inverse ${filePath}}...`)
 	
 				if (frontMatter) {
@@ -66,7 +90,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 					const frontMatterToTranslate = {}
 					const frontMatterToKeep = {}
 					Object.keys(frontMatter).forEach(key => {
-						if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
+						if (translatableFrontMatterFields.includes(key) && !ignoreI18n.frontMatter) frontMatterToTranslate[key] = frontMatter[key]
 						else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
 					})
 					if (Object.keys(frontMatterToTranslate).length > 0) htmlFrontYaml[filePath] = frontMatterToTranslate
@@ -88,7 +112,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 					.replace(/<script type="text\/javascript\+hugowrapper">HESTART(.+)HEEND<\/script>/g, (match, p1, offset, string) => {
 						return '<script type="text/javascript+hugowrapper">{{' + decodeURI(p1) +'}}</script>'
 					})
-				if (frontMatter && frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
+				if (ignoreI18n.content) fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
 				else fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
 			} else {
@@ -120,14 +144,15 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 				let frontMatterPart = fileLines.slice(frontMatterSeparator[0] + 1, frontMatterSeparator[1])
 				const frontMatter = yaml.parse(frontMatterPart.join("\n"))
+				const ignoreI18n = buildIgnoreI18n(frontMatter?.ignore_i18n)
 	
-				if (frontMatter && frontMatter.ignore_i18n && (frontMatter.ignore_i18n === true || frontMatter.ignore_i18n === "all")) return
+				if (ignoreI18n.frontMatter && ignoreI18n.content) return
 				console.log(chalk`Compiling {inverse ${filePath}}...`)
 	
 				const frontMatterToTranslate = {}
 				const frontMatterToKeep = {}
 				Object.keys(frontMatter).forEach(key => {
-					if (translatableFrontMatterFields.includes(key) && ! (frontMatter.ignore_i18n && frontMatter.ignore_i18n === "front-matter")) frontMatterToTranslate[key] = frontMatter[key]
+					if (translatableFrontMatterFields.includes(key) && !ignoreI18n.frontMatter) frontMatterToTranslate[key] = frontMatter[key]
 					else if (!excludedFrontMatterFields.includes(key)) frontMatterToKeep[key] = frontMatter[key]
 				})
 				if (Object.keys(frontMatterToKeep).length > 0) staticFrontYaml[filePath] = frontMatterToKeep	
@@ -141,7 +166,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 					contentPart.join("\n")
 				].join("\n")
 	
-				if (frontMatter && frontMatter.ignore_i18n && frontMatter.ignore_i18n === "content") fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+				if (ignoreI18n.content) fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
 				else fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
 
 			} else {
