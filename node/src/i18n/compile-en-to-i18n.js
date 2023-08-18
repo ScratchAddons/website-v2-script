@@ -220,7 +220,9 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 			if (Object.keys(entryToTranslate).length) changelogToTranslate[entry.Version] = entryToTranslate
 		})
 
-		fs.writeFileSync(i18nRepoPath + "changelog.yml", yaml.stringify(changelogToTranslate))
+		fs.writeFileSync(i18nRepoPath + "changelog.yml", yaml.stringify(changelogToTranslate, {
+			blockQuote: 'literal'
+		}))
 	})()
 
 	console.log("Compiling done!")
