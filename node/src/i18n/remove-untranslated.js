@@ -31,7 +31,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
 		if (!fs.existsSync(i18nLanguageDirPath + filePath)) return
 
-		if (filePath === "hugo-i18n.yml" || filePath === "html-front.yml" || filePath === "contributor-types.yml") {
+		if (filePath === "hugo-i18n.yml" || filePath === "html-front.yml" || filePath === "contributor-types.yml" || filePath === "changelog.yml") {
 
 			let result = removeSimilarEntries(
 				yaml.parse(fs.readFileSync(i18nLanguageDirPath + filePath, "utf-8")),
