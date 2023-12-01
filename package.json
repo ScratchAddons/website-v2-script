@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/ScratchAddons/website-v2-script#readme",
   "dependencies": {
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^6.0.0",
     "axios": "^1.6.0",
     "chalk": "^5.3.0",
     "chalk-template": "^1.1.0",
