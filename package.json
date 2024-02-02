@@ -29,7 +29,7 @@
     "ini": "^4.1.1",
     "matcher": "^5.0.0",
     "opencc-js": "^1.0.5",
-    "prettier": "^2.8.8",
+    "prettier": "^3.2.4",
     "simple-git": "^3.22.0",
     "string-similarity": "^4.0.4",
     "yaml": "^2.3.3"
