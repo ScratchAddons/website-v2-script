@@ -11,9 +11,9 @@ await compileEn(
 	"en/addons-data.json"
 )
 
-await Promise.all(await globby(["./*", "!./en"], {
+await Promise.all((await globby(["./*", "!./en"], {
 	onlyDirectories: true
-}).map(async langPath => {
+})).map(async langPath => {
 
 	const languageCode = path.basename(langPath)
 	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
