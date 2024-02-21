@@ -2,26 +2,26 @@ import fs from "fs-extra"
 import prettier from "prettier"
 import chalk from "chalk"
 
-export default (inputPath, outputPath) => {
+export default async (inputPath, outputPath) => {
 
-	const dataset = []
+	const data = []
 	
 	console.log(`Start compiling English addon dataset.`)
 
 	console.log("Fetching addons list...")
-	let addons = JSON.parse(fs.readFileSync(`${inputPath}addons/addons.json`, "utf-8"))
+	let addons = JSON.parse(await fs.readFile(`${inputPath}addons/addons.json`, "utf-8"))
 	addons = addons.filter(addon => !addon.startsWith("//"))
 
 	console.log(`Found ${chalk.greenBright(addons.length)} addons.`)
 	console.log("Start fetching and pushing all manifests...")
 
-	addons.forEach(addon => {
+	await Promise.all(addons.map(async addon => {
 
-		const manifest = JSON.parse(fs.readFileSync(`${inputPath}addons/${addon}/addon.json`, "utf-8"))
+		const manifest = JSON.parse(await fs.readFile(`${inputPath}addons/${addon}/addon.json`, "utf-8"))
 
 		console.log(`Pushing manifest of ${chalk.inverse(addon)}...`)
 
-		dataset.push({
+		data.push({
 			id: addon,
 			name: manifest.name,
 			description: manifest.description,
@@ -38,12 +38,12 @@ export default (inputPath, outputPath) => {
 			updateUserstylesOnSettingsChange: manifest?.updateUserstylesOnSettingsChange
 		})
 
-	})
+	}))
 
 	console.log("Sorting...")	
-	dataset.sort((a, b) => a.id.localeCompare(b.id))
+	data.sort((a, b) => a.id.localeCompare(b.id))
 	console.log("Writing file...")
-	fs.outputFileSync(outputPath, prettier.format(JSON.stringify(dataset), { parser: "json", useTabs: true }))
+	await fs.outputFile(outputPath, await prettier.format(JSON.stringify(data), { parser: "json", useTabs: true }))
 	console.log("All done!")
 
 }

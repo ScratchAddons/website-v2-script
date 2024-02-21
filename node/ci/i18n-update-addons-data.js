@@ -6,26 +6,26 @@ import compileOther from "../src/addons-data/compile-other.js"
 import removeUntranslated from "../src/i18n/remove-untranslated.js"
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js";
 
-compileEn(
+await compileEn(
 	"../sa/", 
 	"en/addons-data.json"
 )
 
-globbySync(["./*", "!./en"], {
+await Promise.all(globbySync(["./*", "!./en"], {
 	onlyDirectories: true
-}).forEach(langPath => {
+}).map(async langPath => {
 
 	const languageCode = path.basename(langPath)
 	const languageCodeHugo = languageCode.replace("_", "-").toLowerCase()
 
-	compileOther(
+	await compileOther(
 		"../sa/", 
 		`${languageCode}/addons-data.json`, {
 			languageCode: languageCodeHugo
 		}
 	)
 
-	removeUntranslated(
+	await removeUntranslated(
 		langPath + "/",
 		"en/",
 		{
@@ -33,7 +33,7 @@ globbySync(["./*", "!./en"], {
 		}
 	)
 	
-})
+}))
 
 await gitCommitAllAndPush(
 	`Update addons data (${new Date().toISOString()})`,

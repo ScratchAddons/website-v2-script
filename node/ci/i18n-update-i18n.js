@@ -3,16 +3,16 @@ import { globbySync } from "globby"
 import removeUntranslated from "../src/i18n/remove-untranslated.js";
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js";
 
-globbySync(["*", "!en"], {
+await Promise.all(globbySync(["*", "!en"], {
 	onlyDirectories: true
-}).forEach(langPath => {
+}).map(async langPath => {
 
-	removeUntranslated(
+	await removeUntranslated(
 		langPath + "/",
 		"en/"
 	)
 
-})
+}))
 
 // require("../src/i18n/generate-chinese-variants")("zh_TW/", "zh_CN/")
 // require("../src/i18n/generate-chinese-variants")("zh_TW/", "zh_HK/")

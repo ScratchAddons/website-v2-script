@@ -2,39 +2,43 @@ import fs from "fs-extra"
 import prettier from "prettier"
 import chalk from "chalk"
 
-export default (inputPath, outputPath, options) => {
+export default async (inputPath, outputPath, options) => {
 
 	let languageCode = options.languageCode
 
-	const dataset = []
+	const prefixedLog = (...args) => {
+		console.log(`${chalk.blue(languageCode)}:`, ...args)
+	}
+
+	const data = []
 
 	if (languageCode === "en") throw Error("Language can't be en. Use the other script!")
 	
-	console.log(`Start compiling ${chalk.inverse(languageCode)} addon dataset.`)
+	prefixedLog(`${chalk.inverse(languageCode)} Start compiling ${chalk.inverse(languageCode)} addon dataset.`)
 
-	console.log("Fetching addons list...")
-	let addons = JSON.parse(fs.readFileSync(`${inputPath}addons/addons.json`, "utf-8"))
+	prefixedLog(`Fetching addons list...`)
+	let addons = JSON.parse(await fs.readFile(`${inputPath}addons/addons.json`, "utf-8"))
 	addons = addons.filter(addon => !addon.startsWith("//"))
 
-	console.log(`Found ${chalk.greenBright(addons.length)} addons.`)
-	console.log("Start fetching and pushing all manifests...")
+	prefixedLog(`Found ${chalk.greenBright(addons.length)} addons.`)
+	prefixedLog("Start fetching and pushing all manifests...")
 
-	addons.forEach(addon => {
+	await Promise.all(addons.map(async addon => {
 
-		const manifest = JSON.parse(fs.readFileSync(`${inputPath}addons/${addon}/addon.json`, "utf-8"))
+		const manifest = JSON.parse(await fs.readFile(`${inputPath}addons/${addon}/addon.json`, "utf-8"))
 
-		if (fs.existsSync(`${inputPath}addons-l10n/${languageCode}/${addon}.json`)) {
+		if (await fs.exists(`${inputPath}addons-l10n/${languageCode}/${addon}.json`)) {
 
-			const l10nFile = JSON.parse(fs.readFileSync(`${inputPath}addons-l10n/${languageCode}/${addon}.json`, "utf-8"))
+			const l10nFile = JSON.parse(await fs.readFile(`${inputPath}addons-l10n/${languageCode}/${addon}.json`, "utf-8"))
 
-			console.log(`Pushing manifest of ${chalk.inverse(addon)}...`)
+			prefixedLog(`Pushing manifest of ${chalk.inverse(addon)}...`)
 
 			for (let i in manifest.info) {
 				const id = manifest.info[i].id
 				manifest.info[i].text = l10nFile?.[`${addon}/@info-${id}`] || manifest.info[i].text 
 			}
 
-			dataset.push({
+			data.push({
 				id: addon,
 				name: l10nFile?.[`${addon}/@name`] || manifest.name,
 				description: l10nFile?.[`${addon}/@description`] || manifest.description,
@@ -53,9 +57,9 @@ export default (inputPath, outputPath, options) => {
 
 		} else {
 
-			console.log(`No manifest found. Pushing English manifest of ${chalk.inverse(addon)}...`)
+			prefixedLog(`No manifest found. Pushing English manifest of ${chalk.inverse(addon)}...`)
 			
-			dataset.push({
+			data.push({
 				id: addon,
 				name: manifest.name,
 				description: manifest.description,
@@ -74,12 +78,12 @@ export default (inputPath, outputPath, options) => {
 
 		}
 
-	})
+	}))
 
-	console.log("Sorting...")	
-	dataset.sort((a, b) => a.id.localeCompare(b.id))
-	console.log("Writing file...")
-	fs.outputFileSync(outputPath, prettier.format(JSON.stringify(dataset), { parser: "json", useTabs: true }))
-	console.log("All done!")
+	prefixedLog("Sorting...")	
+	data.sort((a, b) => a.id.localeCompare(b.id))
+	prefixedLog("Writing file...")
+	await fs.outputFile(outputPath, await prettier.format(JSON.stringify(data), { parser: "json", useTabs: true }))
+	prefixedLog("All done!")
 
 }
