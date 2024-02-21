@@ -60,8 +60,8 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 
 		} else {
 
-			const enContents = await fs.readFile(eni18nLanguageDirPath + filePath, "utf-8").trim()
-			const langContents = await fs.readFile(i18nLanguageDirPath + filePath, "utf-8").trim()
+			const enContents = (await fs.readFile(eni18nLanguageDirPath + filePath, "utf-8")).trim()
+			const langContents = (await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")).trim()
 
 			if ( enContents === langContents || stringSimilarity.compareTwoStrings(enContents, langContents) === 1) {
 				console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
