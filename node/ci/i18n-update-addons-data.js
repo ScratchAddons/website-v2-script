@@ -1,5 +1,5 @@
 import { gitEmail, gitName } from "./consts.js"
-import { globbySync } from "globby"
+import { globby } from "globby"
 import path from "path"
 import compileEn from "../src/addons-data/compile-en.js";
 import compileOther from "../src/addons-data/compile-other.js"
@@ -11,7 +11,7 @@ await compileEn(
 	"en/addons-data.json"
 )
 
-await Promise.all(globbySync(["./*", "!./en"], {
+await Promise.all(await globby(["./*", "!./en"], {
 	onlyDirectories: true
 }).map(async langPath => {
 
