@@ -2,9 +2,9 @@ import fs from "fs-extra"
 import prettier from "prettier"
 import chalk from "chalk"
 
-export default async (inputPath, outputPath, options) => {
+export default async (inputPath, outputPath, options = {}) => {
 
-	let languageCode = options.languageCode
+	let languageCode = options?.languageCode
 
 	const prefixedLog = (...args) => {
 		console.log(`${chalk.blue(languageCode)}:`, ...args)
@@ -14,7 +14,7 @@ export default async (inputPath, outputPath, options) => {
 
 	if (languageCode === "en") throw Error("Language can't be en. Use the other script!")
 	
-	prefixedLog(`${chalk.inverse(languageCode)} Start compiling ${chalk.inverse(languageCode)} addon dataset.`)
+	prefixedLog(`Start compiling ${chalk.inverse(languageCode)} addon dataset.`)
 
 	prefixedLog(`Fetching addons list...`)
 	let addons = JSON.parse(await fs.readFile(`${inputPath}addons/addons.json`, "utf-8"))

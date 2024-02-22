@@ -8,11 +8,14 @@ import { removeSimilarEntries } from "../recursive-object-functions.js"
 
 export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
-	let languageCode = options.languageCode || path.basename(i18nLanguageDirPath)
+	let languageCode = options?.languageCode ?? path.basename(i18nLanguageDirPath)
+	let globPatterns = options?.globPatterns ?? ["**"]
 
-	console.log(chalk`Removing untranslated files on {inverse ${languageCode}}...`)
+	const prefixedLog = (...args) => {
+		console.log(`${chalk.blue(languageCode)}:`, ...args)
+	}
 
-	let globPatterns = options.globPatterns || ["**"]
+	prefixedLog(chalk`Removing untranslated files on {inverse ${languageCode}}...`)
 
 	const filesEn = await globby(globPatterns.map(pattern => eni18nLanguageDirPath + pattern))
 	const filesLang = await globby(globPatterns.map(pattern => i18nLanguageDirPath + pattern))
@@ -22,7 +25,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 
 	await Promise.all(filesRelLang.map(async filePath => {
 		if (!filesRelEn.includes(filePath)) {
-			console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is not found on English. Removing...`)
+			prefixedLog(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is not found on English. Removing...`)
 			await fs.remove(i18nLanguageDirPath + filePath)
 		}
 	}))
@@ -40,14 +43,14 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 
 			if (JSON.stringify(result) === JSON.stringify(yaml.parse(await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")))) return
 
-			console.log(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+			prefixedLog(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
 
 			if (result && Object.keys(result).length) await fs.writeFile(i18nLanguageDirPath + filePath, yaml.stringify(result, { lineWidth: 0 }))
 			else await fs.writeFile(i18nLanguageDirPath + filePath, "")
 
 		// } else if (filePath === "html-front.yml") {
 
-		// 	console.log(chalkT`Removing unused strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+		// 	prefixedLog(chalkT`Removing unused strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
 
 		// 	let result = yaml.parse(await fs.readFile(i18nLanguageDirPath + "html-front.yml", "utf-8"))
 
@@ -64,10 +67,10 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 			const langContents = (await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")).trim()
 
 			if ( enContents === langContents || stringSimilarity.compareTwoStrings(enContents, langContents) === 1) {
-				console.log(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
+				prefixedLog(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
 				await fs.remove(i18nLanguageDirPath + filePath)
 			// } else {
-			// 	console.log(i18nLanguageDirPath + filePath + " is different")
+			// 	prefixedLog(i18nLanguageDirPath + filePath + " is different")
 			}
 	
 		}

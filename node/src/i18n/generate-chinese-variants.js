@@ -12,8 +12,8 @@ const dict = {
 
 export default async (inLanguageDirPath, outLanguageDirPath, options = {}) => {
 	
-	const inLanguageCode = options.inLanguageCode || path.basename(inLanguageDirPath)
-	const outLanguageCode = options.outLanguageCode || path.basename(outLanguageDirPath)
+	const inLanguageCode = options?.inLanguageCode ?? path.basename(inLanguageDirPath)
+	const outLanguageCode = options?.outLanguageCode ?? path.basename(outLanguageDirPath)
 
 	console.log(`Generating Chinese variant of ${outLanguageCode} from ${inLanguageCode}...`)
 

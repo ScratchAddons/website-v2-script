@@ -47,9 +47,9 @@ const buildIgnoreI18n = ignoreI18nRaw => {
 
 export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
-	let contentGlobPatterns = options.contentGlobPatterns || ["**"]
-	let translatableFrontMatterFields = options.translatableFrontMatterFields || []
-	let excludedFrontMatterFields = options.excludedFrontMatterFields || []
+	let contentGlobPatterns = options?.contentGlobPatterns ?? ["**"]
+	let translatableFrontMatterFields = options?.translatableFrontMatterFields ?? []
+	let excludedFrontMatterFields = options?.excludedFrontMatterFields ?? []
 
 	excludedFrontMatterFields.push("ignore_i18n")
 	

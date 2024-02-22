@@ -19,7 +19,7 @@ const getLanguageDisplayName = languageCode => {
 
 export default (i18nLanguageDirPath, configPath, options = {}) => {
 
-	let languageCode = options.languageCode || undefined
+	let languageCode = options?.languageCode
 
 	if (!languageCode) {
 		languageCode = path.basename(i18nLanguageDirPath)
