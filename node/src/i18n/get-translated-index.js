@@ -1,14 +1,14 @@
 import fs from "fs-extra"
 import yaml from "yaml"
 import path from "path"
-import chalk from 'chalk-template';
+import chalk from 'chalk';
 
 export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {}) => {
 
 	let languageCode = options?.languageCode
 
 	const prefixedLog = (...args) => {
-		prefixedLog(`${chalk.blue(languageCode)}:`, ...args)
+		console.log(`${chalk.blue(languageCode)}:`, ...args)
 	}
 
 	const translatedIndex = fs.existsSync(ymlPath) ? yaml.parse(fs.readFileSync(ymlPath, "utf-8")) : ["en"]
@@ -22,7 +22,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, ymlPath, options = {
 
 	if (!i18nStrings) return
 
-	prefixedLog(chalk`Adding {inverse ${languageCodeHugo}} to the list of translated index page...`)
+	prefixedLog(`Adding ${chalk.inverse(languageCodeHugo)} to the list of translated index page...`)
 	translatedIndex.push(languageCodeHugo)
 	fs.outputFileSync(ymlPath, yaml.stringify(translatedIndex, { lineWidth: 0 }))
 

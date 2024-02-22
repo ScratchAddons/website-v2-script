@@ -1,5 +1,5 @@
 import { globbySync } from "globby"
-import chalk from 'chalk-template';
+import chalk from 'chalk';
 import fs from "fs-extra"
 
 export default (folderPath, globPatterns) => {
@@ -10,7 +10,7 @@ export default (folderPath, globPatterns) => {
 	}))
 	console.log(filesToRemove)
 	filesToRemove.forEach(file => {
-		console.log(chalk`Removing {inverse ${file}}...`)
+		console.log(`Removing ${chalk.inverse(file)}...`)
 		fs.removeSync(file)
 	})
 }

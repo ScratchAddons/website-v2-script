@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import { globbySync } from "globby"
 import yaml from "yaml"
-import chalk from 'chalk-template';
+import chalk from 'chalk';
 import htmlMinifier from "html-minifier"
 
 const minifierOptions = {
@@ -83,7 +83,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 				const ignoreI18n = buildIgnoreI18n(frontMatter?.ignore_i18n)
 	
 				if (ignoreI18n.frontMatter && ignoreI18n.content) return
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 	
 				if (frontMatter) {
 
@@ -117,7 +117,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			} else {
 
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 				staticFrontYaml[filePath] = false
 				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
 				fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
@@ -147,7 +147,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 				const ignoreI18n = buildIgnoreI18n(frontMatter?.ignore_i18n)
 	
 				if (ignoreI18n.frontMatter && ignoreI18n.content) return
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 	
 				const frontMatterToTranslate = {}
 				const frontMatterToKeep = {}
@@ -171,7 +171,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 			} else {
 
-				console.log(chalk`Compiling {inverse ${filePath}}...`)
+				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 				staticFrontYaml[filePath] = false
 				fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
 			}
@@ -183,7 +183,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 	})()
 
 	;(() => {
-		console.log(chalk`Copying Hugo i18n strings file...`)
+		console.log("Copying Hugo i18n strings file...")
 
 		fs.copyFileSync(hugoRepoPath + "i18n/en.yaml", i18nRepoPath + "hugo-i18n.yml")
 	})()
@@ -191,7 +191,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 	;(() => {
 		if (!fs.existsSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml")) return
 
-		console.log(chalk`Copying contributor types file...`)
+		console.log("Copying contributor types file...")
 
 		fs.copyFileSync(hugoRepoPath + "data/credits/contributortypes/description/en.yml", i18nRepoPath + "contributor-types.yml")
 	})()
@@ -199,7 +199,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 	;(() => {
 		if (!fs.existsSync(hugoRepoPath + "data/changelog.yml")) return
 
-		console.log(chalk`Copying translatable changelog file...`)
+		console.log("Copying translatable changelog file...")
 
 		const changelogToTranslate = {}
 

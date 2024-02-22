@@ -1,7 +1,7 @@
 import fs from "fs-extra"
 import { globby } from "globby"
 import path from "path"
-import chalk from 'chalk-template';
+import chalk from 'chalk';
 import yaml from "yaml"
 import stringSimilarity from "string-similarity"
 import { removeSimilarEntries } from "../recursive-object-functions.js"
@@ -15,7 +15,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 		console.log(`${chalk.blue(languageCode)}:`, ...args)
 	}
 
-	prefixedLog(chalk`Removing untranslated files on {inverse ${languageCode}}...`)
+	prefixedLog(`Removing untranslated files on ${chalk.inverse(languageCode)}...`)
 
 	const filesEn = await globby(globPatterns.map(pattern => eni18nLanguageDirPath + pattern))
 	const filesLang = await globby(globPatterns.map(pattern => i18nLanguageDirPath + pattern))
@@ -25,7 +25,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 
 	await Promise.all(filesRelLang.map(async filePath => {
 		if (!filesRelEn.includes(filePath)) {
-			prefixedLog(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is not found on English. Removing...`)
+			prefixedLog(`${chalk.inverse(`${i18nLanguageDirPath}${filePath}`)} is not found on English. Removing...`)
 			await fs.remove(i18nLanguageDirPath + filePath)
 		}
 	}))
@@ -43,7 +43,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 
 			if (JSON.stringify(result) === JSON.stringify(yaml.parse(await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")))) return
 
-			prefixedLog(chalk`Removing untranslated strings on {inverse ${i18nLanguageDirPath}${filePath}}...`)
+			prefixedLog(`Removing untranslated strings on ${chalk.inverse(`${i18nLanguageDirPath}${filePath}`)}...`)
 
 			if (result && Object.keys(result).length) await fs.writeFile(i18nLanguageDirPath + filePath, yaml.stringify(result, { lineWidth: 0 }))
 			else await fs.writeFile(i18nLanguageDirPath + filePath, "")
@@ -67,7 +67,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 			const langContents = (await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")).trim()
 
 			if ( enContents === langContents || stringSimilarity.compareTwoStrings(enContents, langContents) === 1) {
-				prefixedLog(chalk`{inverse ${i18nLanguageDirPath}${filePath}} is similar. Removing...`)
+				prefixedLog(`${chalk.inverse(`${i18nLanguageDirPath}${filePath}`)} is similar. Removing...`)
 				await fs.remove(i18nLanguageDirPath + filePath)
 			// } else {
 			// 	prefixedLog(i18nLanguageDirPath + filePath + " is different")
