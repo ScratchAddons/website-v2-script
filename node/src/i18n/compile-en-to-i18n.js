@@ -64,15 +64,15 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 	}))
 	let staticFrontYaml = {}
 
-	;(() => { 
+	;await (async () => { 
 	
 		let files = contentFiles.filter(path => path.endsWith(".html"))
 		let htmlFrontYaml = {}
 
-		files.forEach(file => {
+		Promise.all(files.map(async file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
 
-			let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
+			let fileLines = (await fs.readFile(file, {encoding: "utf-8"})).split(/\r?\n/)
 			// console.log(fileLines)
 			let frontMatterSeparator = allIndex(fileLines, "---")
 
@@ -112,32 +112,32 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 					.replace(/<script type="text\/javascript\+hugowrapper">HESTART(.+)HEEND<\/script>/g, (match, p1, offset, string) => {
 						return '<script type="text/javascript+hugowrapper">{{' + decodeURI(p1) +'}}</script>'
 					})
-				if (ignoreI18n.content) fs.outputFileSync(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
-				else fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+				if (ignoreI18n.content) await fs.outputFile(i18nRepoPath + "static-html-content/" + filePath, contentMinified)
+				else await fs.outputFile(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
 			} else {
 
 				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 				staticFrontYaml[filePath] = false
 				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
-				fs.outputFileSync(i18nRepoPath + "html-content/" + filePath, contentMinified)
+				await fs.outputFile(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
 			}
 
-		})
+		}))
 
 		if (Object.keys(htmlFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml, { lineWidth: 0 }))
 
 	})()
 
-	;(() => {
+	;await (async () => {
 
 		let files = contentFiles.filter(path => path.endsWith(".md"))
 
-		files.forEach(file => {
+		Promise.all(files.map(async file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
 
-			let fileLines = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
+			let fileLines = (await fs.readFile(file, {encoding: "utf-8"})).split(/\r?\n/)
 			let frontMatterSeparator = allIndex(fileLines, "---")
 
 			if (frontMatterSeparator.length >= 2) {
@@ -166,17 +166,17 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 					contentPart.join("\n")
 				].join("\n")
 	
-				if (ignoreI18n.content) fs.outputFileSync(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
-				else fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
+				if (ignoreI18n.content) await fs.outputFile(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
+				else await fs.outputFile(i18nRepoPath + "markdown/" + filePath, fileOutput)
 
 			} else {
 
 				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 				staticFrontYaml[filePath] = false
-				fs.outputFileSync(i18nRepoPath + "markdown/" + filePath, fileOutput)
+				await fs.outputFile(i18nRepoPath + "markdown/" + filePath, fileOutput)
 			}
 
-		})
+		}))
 
 		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml, { lineWidth: 0 }))
 

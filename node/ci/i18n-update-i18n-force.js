@@ -1,9 +1,9 @@
 import { gitEmail, gitName } from "./consts.js"
-import { globby } from "globby"
+import { globbySync } from "globby"
 import removeUntranslated from "../src/i18n/remove-untranslated.js";
 import gitCommitAllAndPush from "../src/git-commit-all-and-push.js";
 
-await Promise.all((await globby(["*", "!en"], {
+await Promise.all((globbySync(["*", "!en"], {
 	onlyDirectories: true
 })).map(async langPath => {
 

@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import yaml from "yaml"
 import { addMissingEntries } from "../recursive-object-functions.js"
 
-export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
+export default async (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, options = {}) => {
 
 	let languageCode = options?.languageCode
 	let contentGlobPatterns = options?.contentGlobPatterns ?? ["**"]
@@ -40,7 +40,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 		prefixedLog('No HTML and Markdown files that are translated. Skipping these!')
 	}
 
-	if (filesTest) (() => {
+	if (filesTest) await (async () => {
 
 		const inputContentPath = [i18nLanguageDirPath + "html-content/"]
 		const files = globbySync(contentGlobPatterns.map(pattern => inputContentPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".html")).map(path => path.replace(i18nLanguageDirPath, ''))
@@ -50,13 +50,13 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 
 		// prefixedLog(inputContentPath, files, enInputContentPath, enFiles)
 
-		enFiles.forEach(enFile => {
+		Promise.all(enFiles.map(async enFile => {
 
 			let filePath = enFile.split("html-content/")[1]
 			let useEn = false
 			let file = i18nLanguageDirPath + enFile
 
-			if (!files.includes(enFile) || fs.readFileSync(file, {encoding: "utf-8"}).includes("504 Gateway Time-out")) {
+			if (!files.includes(enFile) || (await fs.readFile(file, {encoding: "utf-8"})).includes("504 Gateway Time-out")) {
 				file = eni18nLanguageDirPath + enFile
 				useEn = true
 			}
@@ -75,7 +75,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 					...((typeof htmlFrontYaml[filePath] !== "undefined") ? yaml.stringify(htmlFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
 					...((typeof staticFrontYaml[filePath] !== "undefined") ? yaml.stringify(staticFrontYaml[filePath], { lineWidth: 0 }).trim().split(/\r?\n/) : []),
 					"---",
-					...fs.readFileSync(file, {encoding: "utf-8"})
+					...(await fs.readFile(file, {encoding: "utf-8"}))
 						.replace(/<script type="text\/javascript\+hugowrapper">(.+)<\/script>/g, "$1")
 						.replace(/https:\/\/scratchaddons\.com\/(.+?)#hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"/$1\" >}}")
 						.replace(/https:\/\/scratchaddons\.com#(.+?)_hugo-link-placeholder-(ref|relref)/g, "{{< $2 \"$1\" >}}")
@@ -87,15 +87,15 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 	
 			} else {
 
-				output = fs.readFileSync(file, {encoding: "utf-8"}).split(/\r?\n/)
+				output = await fs.readFile(file, {encoding: "utf-8"}).split(/\r?\n/)
 			}
 		
-			fs.outputFileSync(`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`, output.join("\n"))
+			await fs.outputFile(`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`, output.join("\n"))
 
-		})
+		}))
 	})()
 
-	if (filesTest) (() => {
+	if (filesTest) await (async () => {
 
 		const inputMarkdownPath = [i18nLanguageDirPath + "markdown/"]
 		const files = globbySync(contentGlobPatterns.map(pattern => inputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(i18nLanguageDirPath, ''))
@@ -103,12 +103,12 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 		const enInputMarkdownPath = [eni18nLanguageDirPath + "markdown/", eni18nLanguageDirPath + "static-markdown/"]
 		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
-		enFiles.forEach(enFile => {
+		Promise.all(enFiles.map(async enFile => {
 			let filePath = enFile.split("markdown/")[1]
 			let useEn = false
 			let file = i18nLanguageDirPath + enFile
 
-			if (!files.includes(enFile) || fs.readFileSync(file, {encoding: "utf-8"}).includes("504 Gateway Time-out")) {
+			if (!files.includes(enFile) || (await fs.readFile(file, {encoding: "utf-8"})).includes("504 Gateway Time-out")) {
 				file = eni18nLanguageDirPath + enFile
 				useEn = true
 			}
@@ -118,7 +118,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 			if (useEn) prefixedLog(`Compiling ${chalk.inverse(filePath)} (using English)...`)
 			else prefixedLog(`Compiling ${chalk.inverse(filePath)}...`)
 
-			let output = fs.readFileSync(file, {encoding: "utf-8"})
+			let output = await fs.readFile(file, {encoding: "utf-8"})
 
 			output = output.split("\n---\n")
 
@@ -154,7 +154,7 @@ export default (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, option
 				`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`,
 				output
 			)
-		})
+		}))
 	})()
 
 	;(() => {

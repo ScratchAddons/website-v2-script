@@ -5,11 +5,13 @@ import getTranslatedGiscus from "../src/i18n/get-translated-giscus.js"
 import getTranslatedIndex from "../src/i18n/get-translated-index.js"
 import { pathTranslationExceptionRegexPatterns } from "./consts.js"
 
-globbySync(["../i18n/*", "!../i18n/en"], {
+const langPaths = globbySync(["../i18n/*", "!../i18n/en"], {
 	onlyDirectories: true
-}).forEach(langPath => {
+})
 
-	compileI18nToHugo(
+Promise.all(langPaths.map(async langPath => {
+
+	await compileI18nToHugo(
 		langPath + "/",
 		"../i18n/en/",
 		"./",
@@ -17,6 +19,10 @@ globbySync(["../i18n/*", "!../i18n/en"], {
 			pathTranslationExceptionRegexPatterns
 		}
 	)
+
+}))
+
+langPaths.forEach(langPath => {
 
 	addLanguagesOnConfig(
 		langPath + "/",

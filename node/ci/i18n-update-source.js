@@ -24,7 +24,7 @@ if (fs.existsSync("en/")) {
 }
 fs.ensureDirSync("en/")
 
-compileEnToI18n(
+await compileEnToI18n(
 	"../website/", 
 	"en/", { 
 		contentGlobPatterns,
