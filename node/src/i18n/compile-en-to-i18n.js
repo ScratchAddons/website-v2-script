@@ -45,7 +45,7 @@ const buildIgnoreI18n = ignoreI18nRaw => {
 	return ignoreI18n
 }
 
-export default (hugoRepoPath, i18nRepoPath, options = {}) => {
+export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 	let contentGlobPatterns = options?.contentGlobPatterns ?? ["**"]
 	let translatableFrontMatterFields = options?.translatableFrontMatterFields ?? []
@@ -126,7 +126,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		}))
 
-		if (Object.keys(htmlFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml, { lineWidth: 0 }))
+		if (Object.keys(htmlFrontYaml).length > 0) await fs.outputFile(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml, { lineWidth: 0 }))
 
 	})()
 
@@ -178,7 +178,7 @@ export default (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		}))
 
-		if (Object.keys(staticFrontYaml).length > 0) fs.outputFileSync(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml, { lineWidth: 0 }))
+		if (Object.keys(staticFrontYaml).length > 0) await fs.outputFile(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml, { lineWidth: 0 }))
 
 	})()
 

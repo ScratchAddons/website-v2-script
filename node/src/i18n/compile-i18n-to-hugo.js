@@ -150,7 +150,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, 
 
 			output = output.join("\n---\n")
 
-			fs.outputFileSync(
+			await fs.outputFile(
 				`${hugoRepoPath}content-i18n/${languageCodeHugo}/${filePath}`,
 				output
 			)
