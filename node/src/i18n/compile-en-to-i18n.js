@@ -69,7 +69,7 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 		let files = contentFiles.filter(path => path.endsWith(".html"))
 		let htmlFrontYaml = {}
 
-		Promise.all(files.map(async file => {
+		await Promise.all(files.map(async file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
 
 			let fileLines = (await fs.readFile(file, {encoding: "utf-8"})).split(/\r?\n/)
@@ -134,7 +134,7 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 		let files = contentFiles.filter(path => path.endsWith(".md"))
 
-		Promise.all(files.map(async file => {
+		await Promise.all(files.map(async file => {
 			let filePath = file.replace(hugoRepoPath + "content/", "")
 
 			let fileLines = (await fs.readFile(file, {encoding: "utf-8"})).split(/\r?\n/)

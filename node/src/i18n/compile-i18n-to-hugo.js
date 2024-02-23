@@ -50,7 +50,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, 
 
 		// prefixedLog(inputContentPath, files, enInputContentPath, enFiles)
 
-		Promise.all(enFiles.map(async enFile => {
+		await Promise.all(enFiles.map(async enFile => {
 
 			let filePath = enFile.split("html-content/")[1]
 			let useEn = false
@@ -103,7 +103,7 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, hugoRepoPath, 
 		const enInputMarkdownPath = [eni18nLanguageDirPath + "markdown/", eni18nLanguageDirPath + "static-markdown/"]
 		const enFiles = globbySync(contentGlobPatterns.map(pattern => enInputMarkdownPath.map(path => path + pattern)).flat()).filter(path => path.endsWith(".md")).map(path => path.replace(eni18nLanguageDirPath, ''))
 
-		Promise.all(enFiles.map(async enFile => {
+		await Promise.all(enFiles.map(async enFile => {
 			let filePath = enFile.split("markdown/")[1]
 			let useEn = false
 			let file = i18nLanguageDirPath + enFile
