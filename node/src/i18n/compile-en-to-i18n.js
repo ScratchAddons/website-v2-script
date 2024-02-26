@@ -130,7 +130,7 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 			htmlFrontYaml = Object.keys(htmlFrontYaml).sort().reduce((obj, key) => {
 				obj[key] = htmlFrontYaml[key]
 				return obj
-			})
+			}, {})
 			await fs.outputFile(i18nRepoPath + "html-front.yml", yaml.stringify(htmlFrontYaml, { lineWidth: 0 }))
 		}
 
@@ -188,7 +188,7 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 			staticFrontYaml = Object.keys(staticFrontYaml).sort().reduce((obj, key) => {
 				obj[key] = staticFrontYaml[key]
 				return obj
-			})
+			}, {})
 			await fs.outputFile(i18nRepoPath + "static-front.yml", yaml.stringify(staticFrontYaml, { lineWidth: 0 }))
 		}
 
