@@ -2,7 +2,7 @@ import fs from "fs-extra"
 import { globbySync } from "globby"
 import yaml from "yaml"
 import chalk from 'chalk';
-import htmlMinifier from "html-minifier"
+import htmlMinifier from "html-minifier-terser"
 
 const minifierOptions = {
 	collapseWhitespace: true,
@@ -102,8 +102,8 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 				// if (Object.keys(frontMatterToKeep).length > 0) fs.outputFileSync(i18nRepoPath + "static-front/" + filePath + ".yml", yaml.stringify(frontMatterToKeep, { lineWidth: 0 }))
 	
 				let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)			
-				let contentMinified = htmlMinifier.minify(contentPart.join("\n"), minifierOptions)
-					.replace(/(^|[\n>])(\{\{.+\}\})([\n<]|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
+				let contentMinified = await htmlMinifier.minify(contentPart.join("\n"), minifierOptions)
+				contentMinified = contentMinified.replace(/(^|[\n>])(\{\{.+\}\})([\n<]|$)/g, '$1<script type="text/javascript+hugowrapper">$2</script>$3')
 					.replace(/\"?\{\{< ?(ref|relref) "\/(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com/$2#hugo-link-placeholder-$1")
 					.replace(/\"?\{\{< ?(ref|relref) "(?!\/)(.+?)" ?>\}\}\"?/g, "https://scratchaddons.com#$2_hugo-link-placeholder-$1")
 					.replace(/=(["'])(.+?)\{\{(.+?)\}\}/g, (match, p0, p1, p2, offset, string) => {
@@ -119,7 +119,7 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 
 				console.log(`Compiling ${chalk.inverse(filePath)}...`)
 				staticFrontYaml[filePath] = false
-				let contentMinified = htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
+				let contentMinified = await htmlMinifier.minify(fileLines.join("\n"), minifierOptions)
 				await fs.outputFile(i18nRepoPath + "html-content/" + filePath, contentMinified)
 
 			}
