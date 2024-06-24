@@ -5,6 +5,23 @@ import chalk from 'chalk';
 import yaml from "yaml"
 import stringSimilarity from "string-similarity"
 import { removeSimilarEntries } from "../recursive-object-functions.js"
+import htmlMinifier from "html-minifier-terser"
+
+const minifierOptions = {
+	collapseWhitespace: true,
+	conservativeCollapse: true,
+	collapseInlineTagWhitespace: true,
+	minifyCSS: true,
+	minifyJS: true,
+	preserveLineBreaks: true,
+	removeAttributeQuotes: true,
+	removeComments: true,
+	removeEmptyAttributes: true,
+	removeScriptTypeAttributes: true,
+	removeStyleLinkTypeAttributes: true,
+	ignoreCustomFragments: [ /<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/, /\{\{.+\}\}/ ],
+	processScripts: [ "application/ld+json" ]
+}
 
 export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) => {
 
@@ -63,10 +80,22 @@ export default async (i18nLanguageDirPath, eni18nLanguageDirPath, options = {}) 
 
 		} else {
 
-			const enContents = (await fs.readFile(eni18nLanguageDirPath + filePath, "utf-8")).trim()
-			const langContents = (await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")).trim()
+			let enContents = (await fs.readFile(eni18nLanguageDirPath + filePath, "utf-8")).trim()
+			let langContents = (await fs.readFile(i18nLanguageDirPath + filePath, "utf-8")).trim()
 
-			if ( enContents === langContents || stringSimilarity.compareTwoStrings(enContents, langContents) === 1) {
+			if ( enContents === langContents || stringSimilarity.compareTwoStrings(enContents, langContents) === 1 ) {
+				// To avoid minfication 
+				langContents = enContents
+			} else {
+				try {
+					enContents = await htmlMinifier.minify(enContents.trim(), minifierOptions)
+				} catch (e) {}
+				try {
+					langContents = await htmlMinifier.minify(langContents.trim(), minifierOptions)
+				} catch (e) {}
+			}
+
+			if (enContents === langContents) {
 				prefixedLog(`${chalk.inverse(`${i18nLanguageDirPath}${filePath}`)} is similar. Removing...`)
 				await fs.remove(i18nLanguageDirPath + filePath)
 			// } else {
