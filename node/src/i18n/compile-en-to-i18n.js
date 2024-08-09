@@ -165,12 +165,13 @@ export default async (hugoRepoPath, i18nRepoPath, options = {}) => {
 	
 				let contentPart = fileLines.slice(frontMatterSeparator[1] + 1)
 	
-				let fileOutput = [
-					"---",
-					yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }).trim(),
-					"---",
-					contentPart.join("\n")
-				].join("\n")
+				let fileOutput
+
+				if (Object.keys(frontMatterToTranslate).length) {
+					fileOutput = "---\n" + yaml.stringify(frontMatterToTranslate, { lineWidth: 0 }).trim() + "\n---\n" + contentPart.join("\n")
+				} else {
+					fileOutput = "---\n---\n" + contentPart.join("\n")
+				}
 	
 				if (ignoreI18n.content) await fs.outputFile(i18nRepoPath + "static-markdown/" + filePath, fileOutput)
 				else await fs.outputFile(i18nRepoPath + "markdown/" + filePath, fileOutput)
