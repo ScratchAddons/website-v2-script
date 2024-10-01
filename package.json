@@ -31,6 +31,6 @@
     "prettier": "^3.3.3",
     "simple-git": "^3.25.0",
     "string-similarity": "^4.0.4",
-    "yaml": "^2.5.0"
+    "yaml": "^2.5.1"
   }
 }
